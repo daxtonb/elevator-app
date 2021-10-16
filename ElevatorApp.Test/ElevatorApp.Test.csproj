@@ -19,4 +19,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ElevatorApp.Core\ElevatorApp.Core.csproj" />
+  </ItemGroup>
+
 </Project>

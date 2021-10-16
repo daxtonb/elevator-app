@@ -1670,6 +1670,16 @@
         "build": {
           "build/netcoreapp2.1/xunit.runner.visualstudio.props": {}
         }
+      },
+      "ElevatorApp.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "compile": {
+          "bin/placeholder/ElevatorApp.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ElevatorApp.Core.dll": {}
+        }
       }
     }
   },
@@ -5906,10 +5916,16 @@
         "xunit.runner.visualstudio.2.4.3.nupkg.sha512",
         "xunit.runner.visualstudio.nuspec"
       ]
+    },
+    "ElevatorApp.Core/1.0.0": {
+      "type": "project",
+      "path": "../ElevatorApp.Core/ElevatorApp.Core.csproj",
+      "msbuildProject": "../ElevatorApp.Core/ElevatorApp.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net5.0": [
+      "ElevatorApp.Core >= 1.0.0",
       "Microsoft.NET.Test.Sdk >= 16.9.4",
       "coverlet.collector >= 3.0.2",
       "xunit >= 2.4.1",
@@ -5944,7 +5960,11 @@
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/ElevatorApp.Core.csproj": {
+              "projectPath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/ElevatorApp.Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

@@ -1,0 +1,12 @@
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/bin/Debug/net5.0/ElevatorApp.Core.deps.json
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/bin/Debug/net5.0/ElevatorApp.Core.dll
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/bin/Debug/net5.0/ref/ElevatorApp.Core.dll
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/bin/Debug/net5.0/ElevatorApp.Core.pdb
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.csproj.AssemblyReference.cache
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.AssemblyInfoInputs.cache
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.AssemblyInfo.cs
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.csproj.CoreCompileInputs.cache
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.dll
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ref/ElevatorApp.Core.dll
+/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/obj/Debug/net5.0/ElevatorApp.Core.pdb

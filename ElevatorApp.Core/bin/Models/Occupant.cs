@@ -1,4 +1,4 @@
-namespace Elevator.Core
+namespace ElevatorApp.Core
 {
     /// <summary>
     /// Represents a building occupant that can ride in elevator

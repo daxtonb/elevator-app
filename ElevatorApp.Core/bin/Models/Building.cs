@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Elevator.Core
+namespace ElevatorApp.Core
 {
     /// <summary>
     /// Represents a building containing any number of elevators

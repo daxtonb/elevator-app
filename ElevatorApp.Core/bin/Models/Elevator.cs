@@ -1,6 +1,6 @@
 using System;
 
-namespace Elevator.Core
+namespace ElevatorApp.Core
 {
     /// <summary>
     /// Represents an elevator for a building
