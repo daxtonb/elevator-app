@@ -1,0 +1,72 @@
+{
+  "format": 1,
+  "restore": {
+    "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/ElevatorApp.Server.csproj": {}
+  },
+  "projects": {
+    "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/ElevatorApp.Server.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/ElevatorApp.Server.csproj",
+        "projectName": "ElevatorApp.Server",
+        "projectPath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/ElevatorApp.Server.csproj",
+        "packagesPath": "/home/dax/.nuget/packages/",
+        "outputPath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/obj/",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "/home/dax/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/5.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
