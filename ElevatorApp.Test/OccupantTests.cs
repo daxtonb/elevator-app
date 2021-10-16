@@ -4,21 +4,21 @@ using Xunit;
 
 namespace ElevatorApp.Test
 {
-    public class ElvatorTests
+    public class OccupantTests
     {
         [Fact]
-        public void Min_Weight_Cannot_Be_Zero()
+        public void Weight_Cannot_Be_Zero()
         {
             TestBadConstructorArguments(0);
         }
 
         [Fact]
-        public void Min_Weight_Cannot_Be_Negative()
+        public void Weight_Cannot_Be_Negative()
         {
             TestBadConstructorArguments(-0.1);
         }
 
-        void TestBadConstructorArguments(double maxElevatorWeight)
+        void TestBadConstructorArguments(double weight)
         {
             // Given
             bool isConstructFailed = false;
@@ -26,7 +26,7 @@ namespace ElevatorApp.Test
             try
             {
                 // When
-                _ = new Elevator(maxElevatorWeight);
+                _ = new Occupant(weight);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -35,7 +35,7 @@ namespace ElevatorApp.Test
             finally
             {
                 // Then
-                Assert.True(isConstructFailed, $"Test failed with {nameof(maxElevatorWeight)}: {maxElevatorWeight}");
+                Assert.True(isConstructFailed, $"Test failed with {nameof(weight)}: {weight}");
             }
         }
     }

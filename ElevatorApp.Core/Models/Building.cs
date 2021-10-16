@@ -23,7 +23,7 @@ namespace ElevatorApp.Core
 
         /// <param name="floorCount">Total number of floors for building</param>
         /// <param name="elevatorCount">Total number of elevators for building</param>
-        public Building(int floorCount, int elevatorCount)
+        public Building(int floorCount, int elevatorCount, double maxElevatorWeight)
         {
             if (floorCount <= 1)
             {
@@ -35,9 +35,21 @@ namespace ElevatorApp.Core
                 throw new ArgumentOutOfRangeException(nameof(elevatorCount), elevatorCount, $"{elevatorCount} is not a valid elevator count. Value must be at least 1");
             }
 
+            if (elevatorCount < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(elevatorCount), elevatorCount, $"{elevatorCount} is not a valid elevator count. Value must be at least 1");
+            }
+
             FloorCount = floorCount;
-            Elevators = new Elevator[elevatorCount];
             occupants = new List<Occupant>();
+
+
+            Elevators = new Elevator[elevatorCount];
+
+            for (int i = 0; i < elevatorCount; i++)
+            {
+                Elevators[i] = new Elevator(maxElevatorWeight);
+            }
         }
     }
 }
