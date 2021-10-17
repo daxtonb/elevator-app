@@ -2,3 +2,8 @@ ElevatorApp.Client/bin/
 ElevatorApp.Core/bin/
 ElevatorApp.Server/bin/
 ElevatorApp.Test/bin/
+
+ElevatorApp.Client/obj/Debug/
+ElevatorApp.Core/obj/Debug/
+ElevatorApp.Server/obj/Debug/
+ElevatorApp.Test/obj/Debug/
