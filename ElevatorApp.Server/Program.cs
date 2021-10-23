@@ -13,7 +13,14 @@ namespace ElevatorApp.Server
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            if (args.Length == 6)
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
+            else
+            {
+                Console.WriteLine($"Usage: dotnet run [floorCount] [elevatorCount] [maxElevatorWeight]");
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

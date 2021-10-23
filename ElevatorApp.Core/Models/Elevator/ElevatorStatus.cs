@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ElevatorApp.Core.Utils;
 
 namespace ElevatorApp.Core
 {
@@ -12,10 +13,6 @@ namespace ElevatorApp.Core
     public partial class Elevator
     {
 
-        /// <summary>
-        /// Lock for thread-safe access to the list of current requested floors
-        /// </summary>
-        private readonly object _requestsLock = new object();
 
         /// <summary>
         /// Lock for thread-safe acces to the elevator's current state
@@ -33,6 +30,16 @@ namespace ElevatorApp.Core
         private readonly object _occupantsLock = new object();
 
         /// <summary>
+        /// Lock for thread-safe access of requests
+        /// </summary>
+        private readonly object _disembarkRequestsLock = new object();
+
+        /// <summary>
+        /// Lock for thread-safe access of requests
+        /// </summary>
+        private readonly object _boardRequestsLock = new object();
+
+        /// <summary>
         /// Current state of the elevator
         /// </summary>
         private State _currentState;
@@ -48,7 +55,14 @@ namespace ElevatorApp.Core
         /// </summary>
         private Request _currentRequest;
 
+        /// <summary>
+        /// Current height of the elevator, measured in feet above ground level
+        /// </summary>
         private double _currentHeight = 0;
+
+        /// <summary>
+        /// Date-time stamp that the doors were last opened
+        /// </summary>
         private DateTime? _doorsOpenedDateTime;
 
         /// <summary>
@@ -65,55 +79,7 @@ namespace ElevatorApp.Core
         public bool IsReady => _currentState == State.Ready;
         public bool IsAtDestinationFloor => _currentRequest != null && _currentRequest.FloorNumber == CurrentFloor;
 
-        /// <summary>
-        /// Adds floor number the list of requested floors
-        /// </summary>
-        /// <param name="floorNumber"></param>
-        private Task AddRequestAsync(Request request)
-        {
-            return Task.Run(() =>
-            {
-                lock (_requestsLock)
-                {
-                    if (!_requests.Contains(request))
-                    {
-                        _requests.Add(request);
-                    }
-                }
 
-                return SetNextRequestAsync();
-            });
-        }
-
-        /// <summary>
-        /// Removes floor number from the list of requested floors
-        /// </summary>
-        /// <param name="floorNumber"></param>
-        private Task RemoveRequestAsync(Request request)
-        {
-            return Task.Run(() =>
-            {
-                lock (_requestsLock)
-                {
-                    _requests.Remove(request);
-                }
-            });
-        }
-
-        /// <summary>
-        /// Safely returns request list
-        /// </summary>
-        /// <returns></returns>
-        private Task<List<Request>> GetRequestsAsync()
-        {
-            return Task.Run(() =>
-            {
-                lock (_requestsLock)
-                {
-                    return _requests;
-                }
-            });
-        }
 
         /// <summary>
         /// Evaluates current requests and decides the next request to execute
@@ -122,53 +88,18 @@ namespace ElevatorApp.Core
         {
             return Task.Run(() =>
             {
-                Request nextRequestUp, nextRequestDown;
+                var nextBoardRequest = GetNextBoardRequest();
+                var nextDisembarkRequest = GetNextDisembarkRequest();
+                var closestRequest = RequestHelper.GetClosestRequest(new Request[] { nextBoardRequest, nextDisembarkRequest }, this);
 
-                lock (_requestsLock)
-                {
-                    nextRequestUp = _requests.Where(r => r.FloorNumber > CurrentFloor).OrderBy(r => r.FloorNumber).FirstOrDefault();
-                    nextRequestDown = _requests.Where(r => r.FloorNumber < CurrentFloor).OrderByDescending(r => r.FloorNumber).FirstOrDefault();
-                }
-
-                if (IsDirectionUp)
-                {
-                    if (nextRequestUp != null)
-                        SetCurrentRequest(nextRequestUp);
-                    else if (nextRequestDown != null)
-                        SetCurrentRequest(nextRequestDown);
-                    else
-                        SetCurrentRequest(null);
-                }
-                else if (IsDirectionDown)
-                {
-                    if (nextRequestDown != null)
-                        SetCurrentRequest(nextRequestDown);
-                    else if (nextRequestUp != null)
-                        SetCurrentRequest(nextRequestUp);
-                    else
-                        SetCurrentRequest(null);
-                }
-                else
-                {
-                    if (nextRequestUp != null && nextRequestDown != null)
-                    {
-                        int differenceUp = nextRequestUp.FloorNumber - CurrentFloor;
-                        int differenceDown = CurrentFloor - nextRequestDown.FloorNumber;
-
-                        if (differenceUp < differenceDown)
-                            SetCurrentRequest(nextRequestUp);
-                        else
-                            SetCurrentRequest(nextRequestDown);
-                    }
-                    else
-                    {
-                        SetCurrentRequest(nextRequestUp ?? nextRequestDown);
-                    }
-                }
-
+                SetCurrentRequest(closestRequest);
             });
         }
 
+        /// <summary>
+        /// Sets the current request for the elevator
+        /// </summary>
+        /// <param name="request">Request to set</param>
         private async void SetCurrentRequest(Request request)
         {
             if (request == null)
@@ -183,6 +114,10 @@ namespace ElevatorApp.Core
             {
                 await SetCurrentDirectionAsync(Direction.Down);
             }
+            else if (request is BoardRequest boardRequest)
+            {
+                await SetCurrentDirectionAsync(boardRequest.Direction);
+            }
             else
             {
                 await SetCurrentDirectionAsync(Direction.None);
@@ -191,28 +126,44 @@ namespace ElevatorApp.Core
             _currentRequest = request;
         }
 
-        /// <summary>
-        /// Returns true if any ruests are available
-        /// </summary>
-        /// <returns></returns>
-        private Task<bool> IsAnyRequestsAsync()
+        private Task RemoveRequestAsync(int floorNumber)
         {
             return Task.Run(() =>
             {
-                lock (_requestsLock)
+                lock (_boardRequestsLock)
                 {
-                    return _requests.Any();
+                    for (int i = 0; i < _boardRequests.Count; i++)
+                    {
+                        if (_boardRequests[i].FloorNumber == floorNumber)
+                        {
+                            _boardRequests.RemoveAt(i);
+                            break;
+                        }
+                    }
+
+                }
+
+                lock (_disembarkRequestsLock)
+                {
+                    for (int i = 0; i < _disembarkRequests.Count; i++)
+                    {
+                        if (_disembarkRequests[i].FloorNumber == floorNumber)
+                        {
+                            _disembarkRequests.RemoveAt(i);
+                            break;
+                        }
+                    }
                 }
             });
         }
 
         /// <summary>
-        /// Adds occupant the list of occupants
+        /// Adds occupant to the list of occupants
         /// </summary>
-        /// <param name="occupant"></param>
+        /// <param name="occupant">Occupant to add to elevator</param>
         private Task AddOccupantAsync(Occupant occupant)
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
                 lock (_occupantsLock)
                 {
@@ -221,6 +172,8 @@ namespace ElevatorApp.Core
                         _occupants.Add(occupant);
                     }
                 }
+
+                await RemoveRequestAsync(CurrentFloor);
             });
         }
 

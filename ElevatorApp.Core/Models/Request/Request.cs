@@ -10,7 +10,6 @@ namespace ElevatorApp.Core
         /// </summary>
         public int FloorNumber { get; }
 
-        /// <param name="occupant">Occupant making the request</param>
         /// <param name="floorNumber">Destination floor number</param>
         public Request(int floorNumber)
         {
@@ -19,7 +18,7 @@ namespace ElevatorApp.Core
 
         public override bool Equals(object obj)
         {
-            if (obj is Request request)
+            if (obj is BoardRequest request)
             {
                 return request.FloorNumber == FloorNumber;
             }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElevatorApp.Core.Utils;
 
 namespace ElevatorApp.Core
 {
@@ -11,6 +12,15 @@ namespace ElevatorApp.Core
     /// </summary>
     public partial class Elevator
     {
+        /// <summary>
+        /// Number of elevators in memory
+        /// </summary>
+        public static int elevatorCount = 0;
+
+        /// <summary>
+        /// Elevator's unique identifier
+        /// </summary>
+        public int Id { get; }
         /// <summary>
         /// Building in which elevator belongs to
         /// </summary>
@@ -32,11 +42,16 @@ namespace ElevatorApp.Core
         private static readonly double _maxSpeed = 2;
 
         /// <summary>
-        /// Elevator requests 
+        /// Occupants inside of elevator
         /// </summary>
-        private readonly List<Request> _requests;
-
         private readonly List<Occupant> _occupants;
+
+        /// <summary>
+        /// Requests from occupants inside of the elvator
+        /// </summary>
+        private readonly List<DisembarkRequest> _disembarkRequests;
+
+        private readonly List<BoardRequest> _boardRequests;
 
         /// <summary>
         /// Time for the elevator to wait until closing doors, measured in seonds
@@ -65,34 +80,16 @@ namespace ElevatorApp.Core
             _building = building;
             _maxWeight = maxWeight;
             _timer = new System.Timers.Timer();
+            _disembarkRequests = new List<DisembarkRequest>();
+            _boardRequests = new List<BoardRequest>();
+            _occupants = new List<Occupant>();
 
             _timer.Interval = _elapseTime;
             _timer.Enabled = true;
-        }
+            _timer.Elapsed += OnTimeElapsed;
 
-        /// <summary>
-        /// Submit's a user's request to take the elevator to a specified floor
-        /// </summary>
-        /// <param name="floorNumber">Desired floor's number</param>
-        /// <returns>Task fulfilling the request</returns>
-        public Task RequestFloorAsync(int floorNumber)
-        {
-            if (floorNumber < 1 || floorNumber > _building.FloorCount)
-            {
-                throw new ArgumentOutOfRangeException(nameof(floorNumber), floorNumber, $"{floorNumber} is not a valid floor.");
-            }
-
-            var request = new Request(floorNumber);
-
-            lock (_requestsLock)
-            {
-                if (!_requests.Any(r => r.Equals(request)))
-                {
-                    AddRequestAsync(request).Wait();
-                }
-            }
-
-            return SetNextRequestAsync();
+            elevatorCount += 1;
+            Id = elevatorCount;
         }
 
         /// <summary>
@@ -106,6 +103,11 @@ namespace ElevatorApp.Core
                     && _currentWeight + occupant.Weight < _maxWeight;   // Occupant must not bring elevator over its weight capacity
         }
 
+        /// <summary>
+        /// Returns true if an occupant can exit the elevator
+        /// </summary>
+        /// <param name="occupant"></param>
+        /// <returns>Occupant desiring to exit elevator</returns>
         public bool CanExit(Occupant occupant)
         {
             return _currentState != State.Moving;
@@ -115,7 +117,7 @@ namespace ElevatorApp.Core
         /// Enter occupant into elevator
         /// </summary>
         /// <param name="occupant">Requesting occupant</param>
-        public async void EnterAsync(Occupant occupant)
+        public async Task EnterAsync(Occupant occupant)
         {
             if (!CanEnter(occupant))
             {
@@ -151,6 +153,26 @@ namespace ElevatorApp.Core
             _currentWeight -= occupant.Weight;
         }
 
+        public Task AddDisembarkRequestAsync(DisembarkRequest request)
+        {
+            lock (_disembarkRequestsLock)
+            {
+                _disembarkRequests.Add(request);
+            }
+
+            return SetNextRequestAsync();
+        }
+
+        public Task AddBoardRequestAsync(BoardRequest request)
+        {
+            lock (_boardRequestsLock)
+            {
+                _boardRequests.Add(request);
+            }
+
+            return SetNextRequestAsync();
+        }
+
         /// <summary>
         /// Open elevator doors for occupants to leave or enter
         /// </summary>
@@ -161,14 +183,79 @@ namespace ElevatorApp.Core
                 throw new Exception("Doors may not be opened while elevator is moving.");
             }
 
-            if (_currentState == State.DoorsClosed)
+            if (_currentState == State.DoorsClosed || _currentState == State.Ready)
             {
+                _doorsOpenedDateTime = DateTime.UtcNow;
                 return SetCurrentStateAsync(State.DoorsOpen);
             }
 
-            _doorsOpenedDateTime = DateTime.UtcNow;
-
             return null;
+        }
+
+        private DisembarkRequest GetNextDisembarkRequest()
+        {
+            DisembarkRequest nextUp, nextAlongTheWay, nextDown;
+
+            lock (_disembarkRequestsLock)
+            {
+                var requestsOrderedAscending = _disembarkRequests.OrderBy(r => r.FloorNumber);
+                var requestsOrderedDescending = _disembarkRequests.OrderByDescending(r => r.FloorNumber);
+
+                if (IsDirectionUp)
+                {
+                    nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber >= CurrentFloor);
+                    nextDown = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber < CurrentFloor);
+
+                    return nextAlongTheWay ?? nextDown;
+                }
+                else if (IsDirectionDown)
+                {
+                    nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
+                    nextUp = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber > CurrentFloor);
+
+                    return nextAlongTheWay ?? nextUp;
+                }
+                else
+                {
+                    return RequestHelper.GetClosestRequest(_disembarkRequests, this) as DisembarkRequest;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the next closest board request that is consistent with the elevator's current direction
+        /// </summary>
+        /// <param name="elevator">Requesting elevator</param>
+        private BoardRequest GetNextBoardRequest()
+        {
+            BoardRequest nextUp, nextAlongTheWay, nextDown;
+
+            lock (_disembarkRequestsLock)
+            {
+                var requestsOrderedAscending = _boardRequests.OrderBy(r => r.FloorNumber);
+                var requestsOrderedDescending = _boardRequests.OrderByDescending(r => r.FloorNumber);
+
+                if (IsDirectionUp)
+                {
+                    nextUp = requestsOrderedAscending.FirstOrDefault(r => r.Direction == Elevator.Direction.Up && r.FloorNumber >= CurrentFloor);
+                    nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber >= CurrentFloor);
+                    nextDown = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber < CurrentFloor);
+
+                    return nextUp ?? nextAlongTheWay ?? nextDown;
+                }
+                else if (IsDirectionDown)
+                {
+                    nextDown = requestsOrderedDescending.FirstOrDefault(r => r.Direction == Elevator.Direction.Down && r.FloorNumber <= CurrentFloor);
+                    nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
+                    nextUp = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber > CurrentFloor);
+
+                    return nextDown ?? nextAlongTheWay ?? nextUp;
+                }
+                else
+                {
+                    return RequestHelper.GetClosestRequest(_boardRequests, this) as BoardRequest;
+                }
+            }
         }
 
         /// <summary>
@@ -178,6 +265,11 @@ namespace ElevatorApp.Core
         {
             SetNextRequestAsync().Wait();
             return SetCurrentStateAsync(State.DoorsClosed);
+        }
+
+        public override string ToString()
+        {
+            return $"Elevator {1}, state: {_currentState}, direction: {_currentDirection}, floor: {CurrentFloor}, occupants: {_occupants.Count}";
         }
 
         #region Class Enums

@@ -11,7 +11,7 @@ namespace ElevatorApp.Core
         /// <summary>
         /// State change event
         /// </summary>
-        public delegate void StateChangedHandler(StateChangedEventArgs eventArgs);
+        public delegate void StateChangedHandler(Elevator sender, StateChangedEventArgs eventArgs);
         public event StateChangedHandler StateChanged;
         public class StateChangedEventArgs : EventArgs
         {
@@ -25,13 +25,13 @@ namespace ElevatorApp.Core
         protected virtual void OnStateChanged(StateChangedEventArgs eventArgs)
         {
             var handler = StateChanged;
-            handler?.Invoke(eventArgs);
+            handler?.Invoke(this, eventArgs);
         }
 
         /// <summary>
         /// Direction change event
         /// </summary>
-        public delegate void DirectionChangedHandler(DirectionChangedEventArgs eventArgs);
+        public delegate void DirectionChangedHandler(Elevator elevator, DirectionChangedEventArgs eventArgs);
         public event DirectionChangedHandler DirectionChanged;
         public class DirectionChangedEventArgs : EventArgs
         {
@@ -45,13 +45,13 @@ namespace ElevatorApp.Core
         protected virtual void OnDirectionChanged(DirectionChangedEventArgs eventArgs)
         {
             var handler = DirectionChanged;
-            handler?.Invoke(eventArgs);
+            handler?.Invoke(this, eventArgs);
         }
 
         /// <summary>
         /// Floor change event
         /// </summary>
-        public delegate void FloorChangedHandler(FloorChangedEventArgs eventArgs);
+        public delegate void FloorChangedHandler(Elevator elevator, FloorChangedEventArgs eventArgs);
         public event FloorChangedHandler FloorChanged;
         public class FloorChangedEventArgs : EventArgs
         {
@@ -65,19 +65,23 @@ namespace ElevatorApp.Core
         protected virtual void OnFloorChanged(FloorChangedEventArgs eventArgs)
         {
             var handler = FloorChanged;
-            handler?.Invoke(eventArgs);
+            handler?.Invoke(this, eventArgs);
         }
 
+        /// <summary>
+        /// Logic for updating elevator state, direction, and floor
+        /// </summary>
         private void OnTimeElapsed(object source, ElapsedEventArgs eventArgs)
         {
-            if (IsMoving)
+            if (IsAtDestinationFloor && _doorsOpenedDateTime == null)
             {
-                if (IsAtDestinationFloor)
-                {
-                    SetCurrentStateAsync(State.Ready).Wait();
-                    OpenDoorsAsync().Wait();
-                }
-                else if (IsDirectionUp)
+                SetCurrentStateAsync(State.Ready).Wait();
+                OpenDoorsAsync()?.Wait();
+            }
+            else if (IsMoving)
+            {
+
+                if (IsDirectionUp)
                 {
                     _currentHeight += _maxSpeed;
 
@@ -104,11 +108,17 @@ namespace ElevatorApp.Core
                 && DateTime.UtcNow.AddSeconds(-_timeToCloseDoors) >= _doorsOpenedDateTime.Value)
             {
                 CloseDoorsAsync().Wait();
+                _doorsOpenedDateTime = null;
             }
             // CONDITION: Doors are closed
             else if (IsDoorsClosed)
             {
                 SetNextRequestAsync().Wait();
+
+                if (_currentRequest != null)
+                {
+                    SetCurrentStateAsync(State.Moving).Wait();
+                }
             }
         }
     }
