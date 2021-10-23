@@ -21,6 +21,7 @@ namespace ElevatorApp.Core
         /// Elevator's unique identifier
         /// </summary>
         public int Id { get; }
+
         /// <summary>
         /// Building in which elevator belongs to
         /// </summary>
@@ -67,6 +68,8 @@ namespace ElevatorApp.Core
         /// Timer for timed events
         /// </summary>
         private readonly System.Timers.Timer _timer;
+
+        public Elevator() { }
 
         /// <param name="building">Building to which elevator belongs to</param>
         /// <param name="maxWeight">Maximum weight allowed in elevator</param>
@@ -268,7 +271,7 @@ namespace ElevatorApp.Core
 
         public override string ToString()
         {
-            return $"Elevator {1}, state: {_currentState}, direction: {_currentDirection}, floor: {CurrentFloor}, occupants: {_occupants.Count}";
+            return $"Elevator {Id}, state: {_currentState}, direction: {_currentDirection}, floor: {CurrentFloor}, occupants: {_occupants.Count}, capacity: {_currentWeight / _maxWeight}";
         }
 
         #region Class Enums

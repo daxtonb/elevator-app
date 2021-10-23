@@ -10,9 +10,11 @@ namespace ElevatorApp.Client
             try
             {
                 int port = GetIntFromuser("Enter server port");
-                var app = new App(port);
 
-                Process.GetCurrentProcess().WaitForExit();
+                using (var app = new App(port))
+                {
+                    Process.GetCurrentProcess().WaitForExit();
+                }
             }
             catch (System.Exception ex)
             {

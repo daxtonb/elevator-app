@@ -78,6 +78,9 @@ namespace ElevatorApp.Core
         public bool IsDoorsClosed => _currentState == State.DoorsClosed;
         public bool IsReady => _currentState == State.Ready;
         public bool IsAtDestinationFloor => _currentRequest != null && _currentRequest.FloorNumber == CurrentFloor;
+        public int OccupantsCount => _occupants.Count;
+        public double Capcity => Math.Round(_currentWeight / _maxWeight);
+        public State CurrentState => _currentState;
 
 
 

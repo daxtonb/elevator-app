@@ -55,6 +55,8 @@ namespace ElevatorApp.Core
         /// </summary>
         public State CurrentState => _currentState;
 
+        public Occupant() { }
+
         /// <param name="weight">Weight of occupant</param>
         public Occupant(Building building, double weight)
         {
