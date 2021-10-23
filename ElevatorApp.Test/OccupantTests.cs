@@ -6,6 +6,8 @@ namespace ElevatorApp.Test
 {
     public class OccupantTests
     {
+        public static readonly MockFactory factory = new MockFactory();
+
         [Fact]
         public void Weight_Cannot_Be_Zero()
         {
@@ -26,7 +28,7 @@ namespace ElevatorApp.Test
             try
             {
                 // When
-                _ = new Occupant(weight);
+                _ = new Occupant(factory.CreateBuilding(), weight);
             }
             catch (ArgumentOutOfRangeException)
             {
