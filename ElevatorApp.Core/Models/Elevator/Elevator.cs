@@ -88,8 +88,7 @@ namespace ElevatorApp.Core
             _timer.Enabled = true;
             _timer.Elapsed += OnTimeElapsed;
 
-            elevatorCount += 1;
-            Id = elevatorCount;
+            Id = ++elevatorCount;
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "8NfjNdvndixtdgue69IeXYaBLlIIW4zX3KOorihPg55bz4EKjC8bMowPghAaR+NO8vBZkVe/f7VAxwjqlv6roA==",
+  "dgSpecHash": "XS/HXvhdRM9AJclc0rXrEqN4x2UkHAW9U1SiuqKMgPooTaGJTkr+bliPauA4TYjJjNO1aaN+lO6MXK372QOGiA==",
   "success": true,
   "projectFilePath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/ElevatorApp.Server.csproj",
   "expectedPackageFiles": [

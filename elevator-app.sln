@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Client", "ElevatorApp.Client\ElevatorApp.Client.csproj", "{094E523B-72F5-4AB6-BA30-F09FC6A0635E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Core", "ElevatorApp.Core\ElevatorApp.Core.csproj", "{8190A6FB-FB19-499A-941E-A7A25D0108C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Server", "ElevatorApp.Server\ElevatorApp.Server.csproj", "{2B2AD417-CF48-44B4-B8FE-2830CCA285CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Test", "ElevatorApp.Test\ElevatorApp.Test.csproj", "{BC52369F-2244-4EA5-9CF1-86C747F70FBB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Client", "ElevatorApp.Client\ElevatorApp.Client.csproj", "{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,18 +24,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Debug|x64.Build.0 = Debug|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Debug|x86.Build.0 = Debug|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Release|x64.ActiveCfg = Release|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Release|x64.Build.0 = Release|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Release|x86.ActiveCfg = Release|Any CPU
-		{094E523B-72F5-4AB6-BA30-F09FC6A0635E}.Release|x86.Build.0 = Release|Any CPU
 		{8190A6FB-FB19-499A-941E-A7A25D0108C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8190A6FB-FB19-499A-941E-A7A25D0108C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8190A6FB-FB19-499A-941E-A7A25D0108C9}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -72,5 +60,17 @@ Global
 		{BC52369F-2244-4EA5-9CF1-86C747F70FBB}.Release|x64.Build.0 = Release|Any CPU
 		{BC52369F-2244-4EA5-9CF1-86C747F70FBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC52369F-2244-4EA5-9CF1-86C747F70FBB}.Release|x86.Build.0 = Release|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x64.Build.0 = Debug|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x86.Build.0 = Debug|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x64.ActiveCfg = Release|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x64.Build.0 = Release|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x86.ActiveCfg = Release|Any CPU
+		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

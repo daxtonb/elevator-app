@@ -1,8 +1,25 @@
 {
   "version": 2,
-  "dgSpecHash": "bifRxydFnXoVy7hKSq2GPu5iJUqfZMVNClOD7kMS+ej+2BJfnFzp3st5uKaoDFjurGX7BjAUi+4gytTDIB+2ig==",
+  "dgSpecHash": "UMrcD+5riWwjDe195hfJTDx3M0K6cRyAx/UdLgZ7N1hSRH2QB6rx0vqA4I4mMS4XwfI7mXBJU2JbZ2i/0xNdxA==",
   "success": true,
   "projectFilePath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Client/ElevatorApp.Client.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.connections.abstractions/5.0.11/microsoft.aspnetcore.connections.abstractions.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.http.connections.client/5.0.11/microsoft.aspnetcore.http.connections.client.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.http.connections.common/5.0.11/microsoft.aspnetcore.http.connections.common.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.http.features/5.0.11/microsoft.aspnetcore.http.features.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.signalr.client/5.0.11/microsoft.aspnetcore.signalr.client.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.signalr.client.core/5.0.11/microsoft.aspnetcore.signalr.client.core.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.signalr.common/5.0.11/microsoft.aspnetcore.signalr.common.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.aspnetcore.signalr.protocols.json/5.0.11/microsoft.aspnetcore.signalr.protocols.json.5.0.11.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.dependencyinjection/5.0.2/microsoft.extensions.dependencyinjection.5.0.2.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.logging/5.0.0/microsoft.extensions.logging.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.logging.abstractions/5.0.0/microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.options/5.0.0/microsoft.extensions.options.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.primitives/5.0.1/microsoft.extensions.primitives.5.0.1.nupkg.sha512",
+    "/home/dax/.nuget/packages/system.io.pipelines/5.0.1/system.io.pipelines.5.0.1.nupkg.sha512",
+    "/home/dax/.nuget/packages/system.threading.channels/5.0.0/system.threading.channels.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

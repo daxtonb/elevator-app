@@ -8,6 +8,13 @@ namespace ElevatorApp.Core
     /// </summary>
     public class Occupant
     {
+        private static int _occupantCount = 0;
+
+        /// <summary>
+        /// Unique identifeier for Occupant
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// Building in which occupant belongs to
         /// </summary>
@@ -65,6 +72,8 @@ namespace ElevatorApp.Core
             Weight = weight;
 
             building.Occupants.Add(this);
+
+            Id = ++_occupantCount;
         }
 
         /// <summary>
