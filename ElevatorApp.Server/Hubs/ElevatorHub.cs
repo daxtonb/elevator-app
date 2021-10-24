@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElevatorApp.Core;
+using ElevatorApp.Server.Services;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ElevatorApp.Server.Hubs
@@ -13,12 +14,13 @@ namespace ElevatorApp.Server.Hubs
     public class ElevatorHub : Hub
     {
         private readonly Building _building;
-        private readonly Dictionary<string, Occupant> _occupantsByConnectionId;
+        private readonly ElevatorService _elevatorService;
+        private static Dictionary<string, Occupant> _occupantsByConnectionId = new Dictionary<string, Occupant>();
 
-        public ElevatorHub(Building building)
+        public ElevatorHub(Building building, ElevatorService elevatorService)
         {
             _building = building;
-            _occupantsByConnectionId = new Dictionary<string, Occupant>();
+            _elevatorService = elevatorService;
         }
 
         public override Task OnConnectedAsync()
@@ -49,6 +51,21 @@ namespace ElevatorApp.Server.Hubs
         public IEnumerable<ElevatorViewModel> RequestElevators()
         {
             return _building.Elevators.Select(e => ElevatorViewModel.From(e));
+        }
+
+        public OccupantViewModel RequestOccupant()
+        {
+            if (_occupantsByConnectionId.TryGetValue(Context.ConnectionId, out Occupant occupant))
+            {
+                return OccupantViewModel.From(occupant);
+            }
+
+            throw new Exception("Occupant does not exist");
+        }
+
+        public BuildingViewModel RequestBuilding()
+        {
+            return BuildingViewModel.From(_building);
         }
     }
 }

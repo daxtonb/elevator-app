@@ -1,5 +1,8 @@
 import { HubConnectionBuilder } from '@microsoft/signalr';
+import IBuilding from './data-contracts/IBuilding';
 import { IElevator } from './data-contracts/IElevator';
+import IOccupant from './data-contracts/IOccupant';
+import { Direction } from './enums/Direction';
 import handleSignalrError from './handleSignalrError';
 
 export const connection = new HubConnectionBuilder()
@@ -15,4 +18,33 @@ export async function getAllElevators(): Promise<IElevator[]> {
     }
 
     return [];
+}
+
+export async function requestElevatorByDirection(direction: Direction): Promise<void> {
+    try {
+        return await connection.invoke<void>('RequestElevatorAsync', direction);
+    } catch (error) {
+        handleSignalrError(error);
+    }
+}
+
+export async function getUserOccupant(): Promise<IOccupant> {
+    try {
+        return await connection.invoke<IOccupant>('RequestOccupant');
+    } catch (error) {
+        handleSignalrError(error);
+    }
+
+    throw new Error('Occupant could not be retrieved from server');
+
+}
+
+export async function getServerBuilding(): Promise<IBuilding> {
+    try {
+        return await connection.invoke<IBuilding>('RequestBuilding');
+    } catch (error) {
+        handleSignalrError(error);
+    }
+
+    throw new Error('Building could not be retrieved from server');
 }

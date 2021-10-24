@@ -5,7 +5,9 @@ import rootReducer from './reducers';
 import IState from "../utils/data-contracts/IState";
 
 const initialState: IState = {
-    elevator: []
+    elevator: [],
+    occupant: null,
+    building: null
 };
 
 const middleware = [thunk];

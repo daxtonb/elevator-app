@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ElevatorApp.Core;
 using ElevatorApp.Server.Hubs;
+using ElevatorApp.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -44,6 +45,8 @@ namespace ElevatorApp.Server
 
             // Add an instance of Building as an injectable dependnecy
             services.AddSingleton(CreateBuilding());
+
+            services.AddSingleton<ElevatorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

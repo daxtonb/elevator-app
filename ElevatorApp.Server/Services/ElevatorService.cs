@@ -14,6 +14,7 @@ namespace ElevatorApp.Server.Services
         {
             _building = building;
             _hub = hub;
+            SetEventHandlers();
         }
 
         private void SetEventHandlers()
@@ -27,7 +28,7 @@ namespace ElevatorApp.Server.Services
         }
         private async void SendElevatorUpdate(Elevator elevator, EventArgs eventArgs)
         {
-            await _hub.Clients.All.SendAsync("ReceiveElevatorUpdate", elevator.ToString());
+            await _hub.Clients.All.SendAsync("ReceiveElevatorUpdate", ElevatorViewModel.From(elevator));
         }
     }
 }

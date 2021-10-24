@@ -1,24 +1,30 @@
-import React, { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, useEffect } from 'react';
 import { connect } from 'react-redux';
 import IReduxStore from '../utils/data-contracts/IReduxStore';
 import { IElevator } from '../utils/data-contracts/IElevator';
-import { getElevators } from '../redux/actions/elevator';
-import { throws } from 'assert';
+import { getElevators, receivedElevatorUpdate } from '../redux/actions/elevator';
+import { connection } from '../utils/elevatorHub';
 
 export interface ElevatorsProps extends ComponentProps<any> {
     elevators: IElevator[];
     getElevators: () => any;
+    receivedElevatorUpdate: (elevator: IElevator) => any;
 }
 
 export const Elevators = (props: ElevatorsProps) => {
-    const { getElevators, elevators } = props;
-
+    const { getElevators, elevators, receivedElevatorUpdate } = props;
+    let counter = 100;
 
     useEffect(() => {
         if (!elevators || !elevators.length) {
             getElevators();
+            connection.on('ReceiveElevatorUpdate', (res: IElevator) => {
+                console.log(res);
+                receivedElevatorUpdate(res);
+            });
         }
-    }, [getElevators, elevators]);
+    }, [getElevators, elevators, receivedElevatorUpdate]);
+
     return (
         <>
             <h2>Elevators</h2>
@@ -33,13 +39,13 @@ export const Elevators = (props: ElevatorsProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {elevators.map(elevator =>
-                        <tr>
-                            <td>{elevator.id}</td>
-                            <td>{elevator.currentFloor}</td>
-                            <td>{elevator.state}</td>
-                            <td>{elevator.currentDirection}</td>
-                            <td>{elevator.capacity}</td>
+                    {elevators.map((elevator, index) =>
+                        <tr key={counter++}>
+                            <td key={counter++}>{elevator.id}</td>
+                            <td key={counter++}>{elevator.currentFloor}</td>
+                            <td key={counter++}>{elevator.state}</td>
+                            <td key={counter++}>{elevator.currentDirection}</td>
+                            <td key={counter++}>{elevator.capacity}</td>
                         </tr>)}
                 </tbody>
             </table>
@@ -52,7 +58,8 @@ const mapStateToProps = (state: IReduxStore) => ({
 });
 
 const mapDispatchToProps = {
-    getElevators
+    getElevators,
+    receivedElevatorUpdate
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Elevators);
