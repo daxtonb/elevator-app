@@ -30,7 +30,7 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Height of each floor in the building, measured in feet.
         /// </summary>
-        public double FloorHeight { get; } = 10;
+        public double FloorHeight { get; } = ElevatorConstants.FLOOR_HEIGHT;
 
         /// <param name="floorCount">Total number of floors for building</param>
         /// <param name="elevatorCount">Total number of elevators for building</param>

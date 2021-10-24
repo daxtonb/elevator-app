@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using ElevatorApp.Core;
 using Xunit;
@@ -52,11 +53,12 @@ namespace ElevatorApp.Test
 
             // When
             await occupant.RequestElevatorAsync(Elevator.Direction.Up);
-            System.Threading.Thread.Sleep(2000);
-            isInElevator = occupant.CurrentState == Occupant.State.riding;
-
-            await occupant.RequstFloorAsync(3);
-            System.Threading.Thread.Sleep(30000);
+            occupant.StateChanged += (Occupant occupant, Occupant.StateChangedEventArgs eventArgs) => 
+            {
+                isInElevator = eventArgs.State == Occupant.State.riding;
+            };
+            
+            Thread.Sleep(30000);
 
             // Then
             Assert.True(isInElevator, "Occupant did not board the elevator");

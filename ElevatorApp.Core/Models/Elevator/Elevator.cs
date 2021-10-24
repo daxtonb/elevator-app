@@ -40,7 +40,7 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Maximum speed of the elevator, measured in feet per second
         /// </summary>
-        private static readonly double _maxSpeed = 2;
+        private static readonly double _maxSpeed = ElevatorConstants.MAX_SPEED;
 
         /// <summary>
         /// Occupants inside of elevator
@@ -57,12 +57,12 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Time for the elevator to wait until closing doors, measured in seonds
         /// </summary>
-        private static readonly int _timeToCloseDoors = 10;
+        private static readonly int _timeToCloseDoors = ElevatorConstants.TIME_TO_CLOSE_DOORS;
 
         /// <summary>
         /// Time in milliseconds to schedule checks and fire events
         /// </summary>
-        private static readonly int _elapseTime = 1000; // Check every second
+        private static readonly int _elapseTime = ElevatorConstants.ELAPSE_TIME;
 
         /// <summary>
         /// Timer for timed events
