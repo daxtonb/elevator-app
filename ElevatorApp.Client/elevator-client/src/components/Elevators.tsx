@@ -44,7 +44,7 @@ export const Elevators = (props: ElevatorsProps) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {elevators.map((elevator, index) =>
+                    {elevators.sort((a, b) => a.id - b.id).map((elevator, index) =>
                         <tr key={counter++}>
                             <td key={counter++}>{elevator.id}</td>
                             <td key={counter++}>{elevator.currentFloor}</td>
