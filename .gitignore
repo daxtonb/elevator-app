@@ -7,3 +7,5 @@ ElevatorApp.Client/obj/Debug/
 ElevatorApp.Core/obj/Debug/
 ElevatorApp.Server/obj/Debug/
 ElevatorApp.Test/obj/Debug/
+
+ElevatorApp.Client/node_modules/

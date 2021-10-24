@@ -14,18 +14,6 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build client",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/ElevatorApp.Client/ElevatorApp.Client.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
             "label": "publish",
             "command": "dotnet",
             "type": "process",
@@ -36,6 +24,11 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "run client",
+            "command": "npm run start --workspace ${workspaceFolder}/ElevatorApp.Client/elevator-client",
+            "type": "process"
         },
         {
             "label": "watch",

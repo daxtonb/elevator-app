@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Server", "Eleva
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Test", "ElevatorApp.Test\ElevatorApp.Test.csproj", "{BC52369F-2244-4EA5-9CF1-86C747F70FBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorApp.Client", "ElevatorApp.Client\ElevatorApp.Client.csproj", "{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,17 +58,5 @@ Global
 		{BC52369F-2244-4EA5-9CF1-86C747F70FBB}.Release|x64.Build.0 = Release|Any CPU
 		{BC52369F-2244-4EA5-9CF1-86C747F70FBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{BC52369F-2244-4EA5-9CF1-86C747F70FBB}.Release|x86.Build.0 = Release|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x64.Build.0 = Debug|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Debug|x86.Build.0 = Debug|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x64.ActiveCfg = Release|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x64.Build.0 = Release|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x86.ActiveCfg = Release|Any CPU
-		{964E6837-F7C0-4EE1-82DB-AF95F5E0BE5B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

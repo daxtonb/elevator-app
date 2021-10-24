@@ -18,6 +18,7 @@ namespace ElevatorApp.Server
 {
     public class Startup
     {
+        private readonly string _corsOrigin = "corsOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,13 +29,18 @@ namespace ElevatorApp.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
-            services.AddSignalR();
-            services.AddSwaggerGen(c =>
+            services.AddCors(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ElevatorApp.Server", Version = "v1" });
+                options.AddPolicy(name: _corsOrigin, builder => {
+                    builder.SetIsOriginAllowed(x => _ = true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .Build();
+                });
             });
+
+            services.AddSignalR();
 
             // Add an instance of Building as an injectable dependnecy
             services.AddSingleton(CreateBuilding());
@@ -43,13 +49,12 @@ namespace ElevatorApp.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseRouting();
+            app.UseCors(_corsOrigin);
 
-            app.UseAuthorization();
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
                 endpoints.MapHub<ElevatorHub>(HubConstants.URL_PATH);
             });
         }
