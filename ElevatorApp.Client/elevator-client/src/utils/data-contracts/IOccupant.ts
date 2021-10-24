@@ -8,4 +8,6 @@ export default interface IOccupant {
     currentFloor: number;
     requestedFloor: number;
     currentState: OccupantState;
+    weight: number;
+    elevatorId: number;
 }

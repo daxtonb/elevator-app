@@ -40,6 +40,18 @@ export async function requestElevatorByDirection(direction: Direction): Promise<
 }
 
 /**
+ * Sends a request for the elvator to stop at a floor
+ * @param floorNumber Desired floor number
+ */
+export async function requestElevatorToFloor(floorNumber: number): Promise<void> {
+    try {
+        return await connection.invoke<void>('RequestFloorAsync', floorNumber);
+    } catch (error) {
+        handleSignalrError(error);
+    }
+}
+
+/**
  * Retrieves the occupant represented by the current session
  * @returns Occupant
  */

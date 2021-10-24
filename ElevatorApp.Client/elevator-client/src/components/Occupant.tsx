@@ -2,10 +2,14 @@ import React, { ComponentProps, useEffect } from 'react';
 import { connect } from 'react-redux';
 import IOccupant from '../utils/data-contracts/IOccupant';
 import IState from "../utils/data-contracts/IState";
-import { getOccupant } from '../redux/actions/occupant';
+import { getOccupant, updateOccupant } from '../redux/actions/occupant';
+import { connection } from '../utils/elevatorHub';
+import { OccupantState } from '../utils/enums/OccupantState';
+import ChangeHighlight from "react-change-highlight";
 export interface ElevatorsProps extends ComponentProps<any> {
     occupant: IOccupant | null;
     getOccupant: () => any;
+    updateOccupant: (occupant: IOccupant) => any;
 }
 
 /**
@@ -14,13 +18,14 @@ export interface ElevatorsProps extends ComponentProps<any> {
  * @returns JSX Element
  */
 export const Occupant = (props: ElevatorsProps) => {
-    const { getOccupant, occupant } = props;
+    const { getOccupant, occupant, updateOccupant } = props;
 
     useEffect(() => {
         if (!occupant) {
             getOccupant();
+            connection.on('OccupantUpdated', (occupant: IOccupant) => updateOccupant(occupant));
         }
-    }, [getOccupant, occupant]);
+    }, [getOccupant, occupant, updateOccupant]);
 
     return (
         <>
@@ -32,16 +37,19 @@ export const Occupant = (props: ElevatorsProps) => {
                             <th>ID</th>
                             <th>Status</th>
                             <th>Current Floor</th>
+                            <th>Elevator ID</th>
                             <th>Requested Floor</th>
                             <th>Weight</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{occupant.id}</td>
-                            <td>{occupant.currentState}</td>
-                            <td>{occupant.currentFloor}</td>
-                            <td>{occupant.requestedFloor}</td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.id}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{getStateText(occupant.currentState)}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.currentFloor}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.elevatorId}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.requestedFloor}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.weight}</span></ChangeHighlight></td>
                         </tr>
                     </tbody>
                 </table></>)}
@@ -50,12 +58,26 @@ export const Occupant = (props: ElevatorsProps) => {
     );
 };
 
+function getStateText(state: OccupantState): string {
+    switch (state) {
+        case OccupantState.none:
+            return 'None';
+        case OccupantState.riding:
+            return 'Riding';
+        case OccupantState.waiting:
+            return 'waiting';
+        default:
+            return '';
+    }
+}
+
 const mapStateToProps = (state: IState) => ({
     occupant: state.occupant
 });
 
 const mapDispatchToProps = {
-    getOccupant
+    getOccupant,
+    updateOccupant
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Occupant);
