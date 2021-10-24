@@ -26,6 +26,11 @@ namespace ElevatorApp.Core
         private Elevator.Direction _requestedDirection;
 
         /// <summary>
+        /// Floor number of requested floor
+        /// </summary>
+        private int? _requestedFloor;
+
+        /// <summary>
         /// Current state of occupant
         /// </summary>
         private State _currentState;
@@ -36,6 +41,16 @@ namespace ElevatorApp.Core
         private Elevator _elevator;
 
         /// <summary>
+        /// Floor that occupant is currently on. Default value is 1 (ground floor)
+        /// </summary>
+        private int _currentFloor = 1;
+
+        /// <summary>
+        /// Public property for occupant elevator
+        /// </summary>
+        public Elevator Elevator => _elevator;
+
+        /// <summary>
         /// Weight in lbs of occupant
         /// </summary>
         public double Weight { get; }
@@ -43,12 +58,36 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Floor that occupant is currently on. Default value is 1 (ground floor)
         /// </summary>
-        public int CurrentFloor { get; set; } = 1;
+        public int CurrentFloor
+        {
+            set
+            {
+                if (_currentFloor != value)
+                {
+                    _currentFloor = value;
+                    CurrentFloorChanged?.Invoke(this, new CurrentFloorChangedEventArgs(value));
+                }
+            }
+            
+            get => _currentFloor;
+        }
 
         /// <summary>
         /// Floor that occupant wishes to ride elevator to
         /// </summary>
-        public int RequestedFloor { get; set; }
+        public int? RequestedFloor 
+        {
+            private set 
+            {
+                if (_requestedFloor != value)
+                {
+                    _requestedFloor = value;
+                    RequestedFloorChanged?.Invoke(this, new RequestedFloorChangedEventArgs(value)) ;
+                }
+            }
+
+            get => _requestedFloor;
+        }
 
         /// <summary>
         /// Current state of occupant
@@ -57,8 +96,11 @@ namespace ElevatorApp.Core
         {
             private set 
             {
-                _currentState = value;
-                StateChanged?.Invoke(this, new StateChangedEventArgs(value));
+                if (_currentState != value)
+                {
+                    _currentState = value;
+                    StateChanged?.Invoke(this, new StateChangedEventArgs(value));
+                }
             }
             
             get => _currentState;
@@ -76,6 +118,36 @@ namespace ElevatorApp.Core
             public StateChangedEventArgs(State state)
             {
                 State = state;
+            }
+        }
+
+        /// <summary>
+        /// Requested floor changed event
+        /// </summary>
+        public delegate void RequestedFloorChangedHandler(Occupant sender, RequestedFloorChangedEventArgs eventArgs);
+        public event RequestedFloorChangedHandler RequestedFloorChanged;
+        public class RequestedFloorChangedEventArgs : EventArgs
+        {
+            public int? FloorNumber { get; }
+
+            public RequestedFloorChangedEventArgs(int? floorNumber)
+            {
+                FloorNumber = floorNumber;
+            }
+        }
+
+        /// <summary>
+        /// Current floor changed event
+        /// </summary>
+        public delegate void CurrentFloorChangedHandler(Occupant sender, CurrentFloorChangedEventArgs eventArgs);
+        public event CurrentFloorChangedHandler CurrentFloorChanged;
+        public class CurrentFloorChangedEventArgs : EventArgs
+        {
+            public int? FloorNumber { get; }
+
+            public CurrentFloorChangedEventArgs(int? floorNumber)
+            {
+                FloorNumber = floorNumber;
             }
         }
 
@@ -116,7 +188,32 @@ namespace ElevatorApp.Core
             _requestedDirection = direction;
             CurrentState = State.waiting;
 
+            foreach (var elevator in _building.Elevators)
+            {
+                elevator.StateChanged += HandleElevatorStateChanged;
+            }
+
             return _building.RequestAsync(this, direction);
+        }
+
+        /// <summary>
+        /// Sends request to elevator to stop at floor
+        /// </summary>
+        /// <param name="floorNumber">Desired floor's number</param>
+        public Task RequestFloorAsync(int floorNumber)
+        {
+            if (Elevator == null)
+            {
+                throw new Exception("Occupant is not in elevator");
+            }
+
+            if (floorNumber < 1 || floorNumber > _building.FloorCount)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            RequestedFloor = floorNumber;
+            return Elevator.AddDisembarkRequestAsync(new DisembarkRequest(floorNumber));
         }
 
         /// <summary>
@@ -129,8 +226,8 @@ namespace ElevatorApp.Core
             {
                 await elevator.EnterAsync(this);
                 elevator.StateChanged += HandleElevatorStateChanged;
-                CurrentState = State.riding;
                 _elevator = elevator;
+                CurrentState = State.riding;
             }
         }
 
@@ -141,11 +238,20 @@ namespace ElevatorApp.Core
         /// <param name="eventArgs">Event arguments</param>
         public void HandleElevatorStateChanged(Elevator elevator, Elevator.StateChangedEventArgs eventArgs)
         {
-            if (eventArgs.State == Elevator.State.DoorsOpen && elevator.CurrentFloor == RequestedFloor)
+            if (eventArgs.State == Elevator.State.DoorsOpen)
             {
-                elevator.ExitAsync(this);
-                elevator.StateChanged -= HandleElevatorStateChanged;
-                CurrentState = State.none;
+                if (CurrentState == State.waiting && elevator.CurrentFloor == CurrentFloor)
+                {
+                    elevator.EnterAsync(this).Wait();
+                    CurrentState = State.riding;
+                }
+                else if (CurrentState == State.riding && elevator.CurrentFloor == RequestedFloor)
+                {
+                    elevator.ExitAsync(this);
+                    elevator.StateChanged -= HandleElevatorStateChanged;
+                    RequestedFloor = null;
+                    CurrentState = State.none;
+                }
             }
         }
 

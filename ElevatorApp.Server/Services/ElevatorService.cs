@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using ElevatorApp.Core;
 using ElevatorApp.Server.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -29,6 +30,12 @@ namespace ElevatorApp.Server.Services
         private async void SendElevatorUpdate(Elevator elevator, EventArgs eventArgs)
         {
             await _hub.Clients.All.SendAsync("ReceiveElevatorUpdate", ElevatorViewModel.From(elevator));
+        }
+
+        public async void SendOccupantUpdate(Occupant occupant, EventArgs eventArgs)
+        {
+            var client = ElevatorHub.OccupantsByConnectionId.First(o => o.Value.Id == occupant.Id);
+            await _hub.Clients.Client(client.Key).SendAsync("OccupantUpdated", OccupantViewModel.From(occupant));
         }
     }
 }

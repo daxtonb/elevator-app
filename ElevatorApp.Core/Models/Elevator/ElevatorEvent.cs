@@ -56,6 +56,12 @@ namespace ElevatorApp.Core
         {
             var handler = FloorChanged;
             handler?.Invoke(this, eventArgs);
+
+            // Update all of the occupants
+            foreach (var occupant in _occupants)
+            {
+                occupant.CurrentFloor = eventArgs.FloorNumber;
+            }
         }
 
         /// <summary>
@@ -65,8 +71,8 @@ namespace ElevatorApp.Core
         {
             if (IsAtDestinationFloor && _doorsOpenedDateTime == null)
             {
-                SetCurrentStateAsync(State.Ready).Wait();
-                OpenDoorsAsync()?.Wait();
+                CurrentState = State.Ready;
+                OpenDoors();
             }
             else if (IsMoving)
             {
@@ -107,7 +113,7 @@ namespace ElevatorApp.Core
 
                 if (_currentRequest != null)
                 {
-                    SetCurrentStateAsync(State.Moving).Wait();
+                    CurrentState = State.Moving;
                 }
             }
         }

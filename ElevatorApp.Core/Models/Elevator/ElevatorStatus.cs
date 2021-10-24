@@ -85,9 +85,13 @@ namespace ElevatorApp.Core
         {
             private set 
             {
-                lock (_currentStateLock)
+                if (_currentState != value)
                 {
-                    _currentState = value;
+
+                    lock (_currentStateLock)
+                    {
+                        _currentState = value;
+                    }
                     StateChanged?.Invoke(this, new StateChangedEventArgs(value));
                 }
             }
@@ -105,10 +109,13 @@ namespace ElevatorApp.Core
         {
             private set 
             {
-                lock (_currentDirectionLock)
+                if (_currentDirection != value)
                 {
-                     _currentDirection = value;
-                     DirectionChanged?.Invoke(this, new DirectionChangedEventArgs(value));
+                    lock (_currentDirectionLock)
+                    {
+                        _currentDirection = value;
+                    }
+                    DirectionChanged?.Invoke(this, new DirectionChangedEventArgs(value));
                 }
             }
             get 
@@ -139,27 +146,27 @@ namespace ElevatorApp.Core
         /// Sets the current request for the elevator
         /// </summary>
         /// <param name="request">Request to set</param>
-        private async void SetCurrentRequest(Request request)
+        private void SetCurrentRequest(Request request)
         {
             if (request == null)
             {
-                await SetCurrentDirectionAsync(Direction.None);
+                CurrentDirection = Direction.None;
             }
             else if (request.FloorNumber > CurrentFloor)
             {
-                await SetCurrentDirectionAsync(Direction.Up);
+                CurrentDirection = Direction.Up;
             }
             else if (request.FloorNumber < CurrentFloor)
             {
-                await SetCurrentDirectionAsync(Direction.Down);
+                CurrentDirection = Direction.Down;
             }
             else if (request is BoardRequest boardRequest)
             {
-                await SetCurrentDirectionAsync(boardRequest.Direction);
+                CurrentDirection = boardRequest.Direction;
             }
             else
             {
-                await SetCurrentDirectionAsync(Direction.None);
+                CurrentDirection = Direction.None;
             }
 
             _currentRequest = request;
@@ -229,22 +236,6 @@ namespace ElevatorApp.Core
                     _occupants.Remove(occupant);
                 }
             });
-        }
-
-        /// <summary>
-        /// Sets the current state of the elevator
-        /// </summary>
-        public Task SetCurrentStateAsync(State state)
-        {
-            return Task.Run(() => CurrentState = state);
-        }
-
-        /// <summary>
-        /// Sets the current Direction of the elevator
-        /// </summary>
-        public Task SetCurrentDirectionAsync(Direction direction)
-        {
-            return Task.Run(() => CurrentDirection = direction);
         }
     }
 }

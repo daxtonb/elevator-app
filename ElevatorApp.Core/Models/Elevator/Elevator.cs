@@ -126,9 +126,9 @@ namespace ElevatorApp.Core
                 throw new Exception("Occupant may not enter");
             }
 
-            if (CurrentState == State.DoorsClosed)
+            if (_currentState == State.DoorsClosed)
             {
-                await OpenDoorsAsync();
+                OpenDoors();
             }
 
             await AddOccupantAsync(occupant);
@@ -148,7 +148,7 @@ namespace ElevatorApp.Core
 
             if (CurrentState == State.DoorsClosed)
             {
-                await OpenDoorsAsync();
+                OpenDoors();
             }
 
             await RemoveOccupantAsync(occupant);
@@ -178,20 +178,18 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Open elevator doors for occupants to leave or enter
         /// </summary>
-        private Task OpenDoorsAsync()
+        private void OpenDoors()
         {
-            if (CurrentState == State.Moving)
+            if (_currentState == State.Moving)
             {
                 throw new Exception("Doors may not be opened while elevator is moving.");
             }
 
-            if (CurrentState == State.DoorsClosed || CurrentState == State.Ready)
+            if (_currentState == State.DoorsClosed || _currentState == State.Ready)
             {
                 _doorsOpenedDateTime = DateTime.UtcNow;
-                return SetCurrentStateAsync(State.DoorsOpen);
+                CurrentState = State.DoorsOpen;
             }
-
-            return null;
         }
 
         private DisembarkRequest GetNextDisembarkRequest()
@@ -265,8 +263,8 @@ namespace ElevatorApp.Core
         /// </summary>
         private Task CloseDoorsAsync()
         {
-            SetNextRequestAsync().Wait();
-            return SetCurrentStateAsync(State.DoorsClosed);
+            CurrentState = State.DoorsClosed;
+            return SetNextRequestAsync();
         }
 
         public override string ToString()

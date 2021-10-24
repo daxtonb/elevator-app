@@ -15,7 +15,7 @@ namespace ElevatorApp.Server.Hubs
     {
         private readonly Building _building;
         private readonly ElevatorService _elevatorService;
-        private static Dictionary<string, Occupant> _occupantsByConnectionId = new Dictionary<string, Occupant>();
+        public static Dictionary<string, Occupant> OccupantsByConnectionId { get; } = new Dictionary<string, Occupant>();
 
         public ElevatorHub(Building building, ElevatorService elevatorService)
         {
@@ -25,27 +25,33 @@ namespace ElevatorApp.Server.Hubs
 
         public override Task OnConnectedAsync()
         {
-            base.OnConnectedAsync();
-
             var occupant = new Occupant(_building, 150);
-            _occupantsByConnectionId.Add(Context.ConnectionId, occupant);
+            OccupantsByConnectionId.Add(Context.ConnectionId, occupant);
             _building.Occupants.Add(occupant);
 
-            Clients.Caller.SendAsync(HubConstants.RECEIVE_OCCUPANT, OccupantViewModel.From(occupant)).Wait();
+            occupant.StateChanged += _elevatorService.SendOccupantUpdate;
+            occupant.RequestedFloorChanged += _elevatorService.SendOccupantUpdate;
+            occupant.CurrentFloorChanged += _elevatorService.SendOccupantUpdate;
 
-            return Clients.Caller.SendAsync(HubConstants.RECEIVE_BUILDING, BuildingViewModel.From(_building));
+            return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            _occupantsByConnectionId.Remove(Context.ConnectionId);
+            OccupantsByConnectionId.Remove(Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
 
         public Task RequestElevatorAsync(Elevator.Direction direction)
         {
-            var occupant = _occupantsByConnectionId[Context.ConnectionId];
-            return _building.RequestAsync(occupant, direction);
+            var occupant = OccupantsByConnectionId[Context.ConnectionId];
+            return occupant.RequestElevatorAsync(direction);
+        }
+
+        public Task RequestFloorAsync(int floorNumber)
+        {
+            var occupant = GetClientOccupant();
+            return occupant.RequestFloorAsync(floorNumber);
         }
 
         public IEnumerable<ElevatorViewModel> RequestElevators()
@@ -55,17 +61,22 @@ namespace ElevatorApp.Server.Hubs
 
         public OccupantViewModel RequestOccupant()
         {
-            if (_occupantsByConnectionId.TryGetValue(Context.ConnectionId, out Occupant occupant))
-            {
-                return OccupantViewModel.From(occupant);
-            }
-
-            throw new Exception("Occupant does not exist");
+            return OccupantViewModel.From(GetClientOccupant());
         }
 
         public BuildingViewModel RequestBuilding()
         {
             return BuildingViewModel.From(_building);
+        }
+
+        private Occupant GetClientOccupant()
+        {
+            if (OccupantsByConnectionId.TryGetValue(Context.ConnectionId, out Occupant occupant))
+            {
+                return occupant;
+            }
+
+            throw new Exception("Occupant does not exist");
         }
     }
 }
