@@ -22,11 +22,6 @@ namespace ElevatorApp.Core
                 State = state;
             }
         }
-        protected virtual void OnStateChanged(StateChangedEventArgs eventArgs)
-        {
-            var handler = StateChanged;
-            handler?.Invoke(this, eventArgs);
-        }
 
         /// <summary>
         /// Direction change event
@@ -41,11 +36,6 @@ namespace ElevatorApp.Core
             {
                 Direction = direction;
             }
-        }
-        protected virtual void OnDirectionChanged(DirectionChangedEventArgs eventArgs)
-        {
-            var handler = DirectionChanged;
-            handler?.Invoke(this, eventArgs);
         }
 
         /// <summary>

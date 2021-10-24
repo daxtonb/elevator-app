@@ -53,7 +53,31 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Current state of occupant
         /// </summary>
-        public State CurrentState => _currentState;
+        public State CurrentState 
+        {
+            private set 
+            {
+                _currentState = value;
+                StateChanged?.Invoke(this, new StateChangedEventArgs(value));
+            }
+            
+            get => _currentState;
+        }
+
+        /// <summary>
+        /// State change event
+        /// </summary>
+        public delegate void StateChangedHandler(Occupant sender, StateChangedEventArgs eventArgs);
+        public event StateChangedHandler StateChanged;
+        public class StateChangedEventArgs : EventArgs
+        {
+            public State State { get; }
+
+            public StateChangedEventArgs(State state)
+            {
+                State = state;
+            }
+        }
 
         public Occupant() { }
 
@@ -90,7 +114,7 @@ namespace ElevatorApp.Core
             }
 
             _requestedDirection = direction;
-            _currentState = State.waiting;
+            CurrentState = State.waiting;
 
             return _building.RequestAsync(this, direction);
         }
@@ -105,7 +129,7 @@ namespace ElevatorApp.Core
             {
                 await elevator.EnterAsync(this);
                 elevator.StateChanged += HandleElevatorStateChanged;
-                _currentState = State.riding;
+                CurrentState = State.riding;
                 _elevator = elevator;
             }
         }
@@ -121,7 +145,7 @@ namespace ElevatorApp.Core
             {
                 elevator.ExitAsync(this);
                 elevator.StateChanged -= HandleElevatorStateChanged;
-                _currentState = State.none;
+                CurrentState = State.none;
             }
         }
 
@@ -145,7 +169,6 @@ namespace ElevatorApp.Core
 
             return _elevator.AddDisembarkRequestAsync(new DisembarkRequest(floorNumber));
         }
-
 
         #region Occupant Enums
 

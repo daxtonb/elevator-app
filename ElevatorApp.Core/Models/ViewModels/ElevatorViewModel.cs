@@ -18,7 +18,7 @@ namespace ElevatorApp.Core
                 OccupantCount = elevator.OccupantsCount,
                 Capacity = elevator.Capcity,
                 CurrentFloor = elevator.CurrentFloor,
-                CurrentDirection = elevator.GetCurrentDirection()
+                CurrentDirection = elevator.CurrentDirection
             };
         }
     }

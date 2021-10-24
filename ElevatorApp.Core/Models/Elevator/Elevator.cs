@@ -100,7 +100,7 @@ namespace ElevatorApp.Core
         /// <param name="occupant">Occupant desiring to enter elevator</param>
         public bool CanEnter(Occupant occupant)
         {
-            return _currentState != State.Moving                        // Elevator must not be moving
+            return CurrentState != State.Moving                        // Elevator must not be moving
                     && occupant.CurrentFloor == occupant.CurrentFloor   // Occupant must be on the same floor as the stopped elevator
                     && _currentWeight + occupant.Weight < _maxWeight;   // Occupant must not bring elevator over its weight capacity
         }
@@ -112,7 +112,7 @@ namespace ElevatorApp.Core
         /// <returns>Occupant desiring to exit elevator</returns>
         public bool CanExit(Occupant occupant)
         {
-            return _currentState != State.Moving;
+            return CurrentState != State.Moving;
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace ElevatorApp.Core
                 throw new Exception("Occupant may not enter");
             }
 
-            if (_currentState == State.DoorsClosed)
+            if (CurrentState == State.DoorsClosed)
             {
                 await OpenDoorsAsync();
             }
@@ -146,7 +146,7 @@ namespace ElevatorApp.Core
                 throw new Exception("Occupant may not exit");
             }
 
-            if (_currentState == State.DoorsClosed)
+            if (CurrentState == State.DoorsClosed)
             {
                 await OpenDoorsAsync();
             }
@@ -180,12 +180,12 @@ namespace ElevatorApp.Core
         /// </summary>
         private Task OpenDoorsAsync()
         {
-            if (_currentState == State.Moving)
+            if (CurrentState == State.Moving)
             {
                 throw new Exception("Doors may not be opened while elevator is moving.");
             }
 
-            if (_currentState == State.DoorsClosed || _currentState == State.Ready)
+            if (CurrentState == State.DoorsClosed || CurrentState == State.Ready)
             {
                 _doorsOpenedDateTime = DateTime.UtcNow;
                 return SetCurrentStateAsync(State.DoorsOpen);
@@ -271,7 +271,7 @@ namespace ElevatorApp.Core
 
         public override string ToString()
         {
-            return $"Elevator {Id}, state: {_currentState}, direction: {_currentDirection}, floor: {CurrentFloor}, occupants: {_occupants.Count}, capacity: {_currentWeight / _maxWeight}";
+            return $"Elevator {Id}, state: {CurrentState}, direction: {_currentDirection}, floor: {CurrentFloor}, occupants: {_occupants.Count}, capacity: {_currentWeight / _maxWeight}";
         }
 
         #region Class Enums

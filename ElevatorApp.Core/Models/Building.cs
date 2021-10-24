@@ -117,11 +117,11 @@ namespace ElevatorApp.Core
             IEnumerable<Elevator> elevators;
             if (request.Direction == Elevator.Direction.Up)
             {
-                elevators = Elevators.Where(e => e.GetCurrentDirection() == request.Direction && e.CurrentFloor < request.FloorNumber);
+                elevators = Elevators.Where(e => e.CurrentDirection == request.Direction && e.CurrentFloor < request.FloorNumber);
             }
             else
             {
-                elevators = Elevators.Where(e => e.GetCurrentDirection() == request.Direction && e.CurrentFloor > request.FloorNumber);
+                elevators = Elevators.Where(e => e.CurrentDirection == request.Direction && e.CurrentFloor > request.FloorNumber);
             }
 
             return GetNearestElevator(elevators, request);

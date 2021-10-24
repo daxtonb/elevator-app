@@ -70,19 +70,55 @@ namespace ElevatorApp.Core
         /// </summary>
         public int CurrentFloor => (int)Math.Floor(_currentHeight / _building.FloorHeight) + 1;
 
-        public bool IsDirectionUp => _currentDirection == Direction.Up;
-        public bool IsDirectionDown => _currentDirection == Direction.Down;
-        public bool IsNoDirection => _currentDirection == Direction.None;
-        public bool IsMoving => _currentState == State.Moving;
-        public bool IsDoorsOpen => _currentState == State.DoorsOpen;
-        public bool IsDoorsClosed => _currentState == State.DoorsClosed;
-        public bool IsReady => _currentState == State.Ready;
+        public bool IsDirectionUp => CurrentDirection == Direction.Up;
+        public bool IsDirectionDown => CurrentDirection == Direction.Down;
+        public bool IsNoDirection => CurrentDirection == Direction.None;
+        public bool IsMoving => CurrentState == State.Moving;
+        public bool IsDoorsOpen => CurrentState == State.DoorsOpen;
+        public bool IsDoorsClosed => CurrentState == State.DoorsClosed;
+        public bool IsReady => CurrentState == State.Ready;
         public bool IsAtDestinationFloor => _currentRequest != null && _currentRequest.FloorNumber == CurrentFloor;
         public int OccupantsCount => _occupants.Count;
         public double Capcity => Math.Round(_currentWeight / _maxWeight);
-        public State CurrentState => _currentState;
 
+        public State CurrentState 
+        {
+            private set 
+            {
+                lock (_currentStateLock)
+                {
+                    _currentState = value;
+                    StateChanged?.Invoke(this, new StateChangedEventArgs(value));
+                }
+            }
 
+            get
+            {
+                lock (_currentStateLock)
+                {
+                    return _currentState;
+                }
+            }
+        }
+   
+        public Direction CurrentDirection
+        {
+            private set 
+            {
+                lock (_currentDirectionLock)
+                {
+                     _currentDirection = value;
+                     DirectionChanged?.Invoke(this, new DirectionChangedEventArgs(value));
+                }
+            }
+            get 
+            {
+                lock (_currentDirectionLock)
+                {
+                    return _currentDirection;
+                }
+            }
+        }
 
         /// <summary>
         /// Evaluates current requests and decides the next request to execute
@@ -200,39 +236,15 @@ namespace ElevatorApp.Core
         /// </summary>
         public Task SetCurrentStateAsync(State state)
         {
-            return Task.Run(() =>
-            {
-                lock (_currentStateLock)
-                {
-                    _currentState = state;
-                    OnStateChanged(new StateChangedEventArgs(state));
-                }
-            });
+            return Task.Run(() => CurrentState = state);
         }
-
-        /// <summary>
-        /// Gets the current state of the elevator
-        /// </summary>
-        public State GetCurrentState() => _currentState;
 
         /// <summary>
         /// Sets the current Direction of the elevator
         /// </summary>
         public Task SetCurrentDirectionAsync(Direction direction)
         {
-            return Task.Run(() =>
-            {
-                lock (_currentDirectionLock)
-                {
-                    _currentDirection = direction;
-                    OnDirectionChanged(new DirectionChangedEventArgs(direction));
-                }
-            });
+            return Task.Run(() => CurrentDirection = direction);
         }
-
-        /// <summary>
-        /// Gets the current Direction of the elevator
-        /// </summary>
-        public Direction GetCurrentDirection() => _currentDirection;
     }
 }
