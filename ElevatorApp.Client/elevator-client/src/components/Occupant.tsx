@@ -8,6 +8,11 @@ export interface ElevatorsProps extends ComponentProps<any> {
     getOccupant: () => any;
 }
 
+/**
+ * Displays occupant's current data
+ * @param props { occupant, getOccupant }
+ * @returns JSX Element
+ */
 export const Occupant = (props: ElevatorsProps) => {
     const { getOccupant, occupant } = props;
 

@@ -1,7 +1,9 @@
 import { OccupantState } from "../enums/OccupantState";
 
-export default interface IOccupant
-{
+/**
+ * Models an occupant that can ride an elevator
+ */
+export default interface IOccupant {
     id: number;
     currentFloor: number;
     requestedFloor: number;

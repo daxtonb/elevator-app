@@ -4,6 +4,11 @@ interface ElevatorPanelProps extends ComponentProps<any> {
     floorCount: number;
 }
 
+/**
+ * Represents the button panel from inside the elevator
+ * @param props { floorCount }
+ * @returns JSX element
+ */
 function ElevatorPanel(props: ElevatorPanelProps) {
     const { floorCount } = props;
 

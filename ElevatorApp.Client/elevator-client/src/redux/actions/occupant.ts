@@ -5,6 +5,10 @@ import IAction from '../../utils/data-contracts/IAction';
 import { OCCUPANT_GET_SUCCESS } from "./actionTypes";
 import handleSignalrError from '../../utils/handleSignalrError';
 
+/**
+ * Retrieves occupant representing the user of this session
+ * @returns Occupant
+ */
 export const getOccupant = () => async (dispatch: ThunkDispatch<any, any, any>) => {
     try {
         const occupant = await getUserOccupant();

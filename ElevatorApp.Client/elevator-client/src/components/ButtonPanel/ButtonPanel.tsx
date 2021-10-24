@@ -16,6 +16,11 @@ export interface ButtonPanelProps extends ComponentProps<any> {
     getBuilding: () => any;
 }
 
+/**
+ * Displays the appropriate buttons based on where the occupant is
+ * @param props { occupant, building, getOccupant, getBuilding }
+ * @returns JSX element
+ */
 export const ButtonPanel = (props: ButtonPanelProps) => {
     const { getOccupant, occupant, getBuilding, building } = props;
 

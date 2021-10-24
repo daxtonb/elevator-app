@@ -12,6 +12,11 @@ export interface FloorPanelProps extends ComponentProps<any> {
     requestElevator: (direction: Direction) => any;
 }
 
+/**
+ * Reperesents the button panel for requesting an elevator on a building floor
+ * @param props { building, occupant, requestElevator }
+ * @returns JSX Element
+ */
 export const FloorPanel = (props: FloorPanelProps) => {
     const { building, occupant, requestElevator } = props;
 

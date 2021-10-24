@@ -6,6 +6,10 @@ import { ELEVATORS_GET_SUCCESS, ELEVATOR_REQUEST_SUCCESS, ELEVATOR_UPDATED } fro
 import { getAllElevators, requestElevatorByDirection } from "../../utils/elevatorHub";
 import { Direction } from '../../utils/enums/Direction';
 
+/**
+ * Retrieves the eleavtors from the server
+ * @returns Elevators in the server's building
+ */
 export const getElevators = () => async (dispatch: ThunkDispatch<any, any, any>) => {
     try {
         const elevators = await getAllElevators();
@@ -22,6 +26,10 @@ export const getElevators = () => async (dispatch: ThunkDispatch<any, any, any>)
     }
 };
 
+/**
+ * Sends a request to the server to dispatch an elevator
+ * @param direction Up or down
+ */
 export const requestElevator = (direction: Direction) => async (dispatch: ThunkDispatch<any, any, any>) => {
     try {
         await requestElevatorByDirection(direction);
@@ -37,6 +45,10 @@ export const requestElevator = (direction: Direction) => async (dispatch: ThunkD
     }
 };
 
+/**
+ * Handles an elevator update via Redux
+ * @param elevator Updated elevator
+ */
 export const receivedElevatorUpdate = (elevator: IElevator) => (dispatch: ThunkDispatch<any, any, any>) => {
     try {
         const action: IAction<IElevator> = {

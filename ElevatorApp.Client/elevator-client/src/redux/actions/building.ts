@@ -5,6 +5,10 @@ import { getServerBuilding } from '../../utils/elevatorHub';
 import handleSignalrError from '../../utils/handleSignalrError';
 import { BUILDING_GET_SUCCESS } from './actionTypes';
 
+/**
+ * Retrieves the building represented on the server
+ * @returns The server's building
+ */
 export const getBuilding = () => async (dispatch: ThunkDispatch<any, any, any>) => {
     try {
         const building = await getServerBuilding();

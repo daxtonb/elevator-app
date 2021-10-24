@@ -1,9 +1,9 @@
 import { ComponentProps, useEffect } from 'react';
 import { connect } from 'react-redux';
-import IReduxStore from '../utils/data-contracts/IReduxStore';
 import { IElevator } from '../utils/data-contracts/IElevator';
 import { getElevators, receivedElevatorUpdate } from '../redux/actions/elevator';
 import { connection } from '../utils/elevatorHub';
+import IState from '../utils/data-contracts/IState';
 
 export interface ElevatorsProps extends ComponentProps<any> {
     elevators: IElevator[];
@@ -11,6 +11,11 @@ export interface ElevatorsProps extends ComponentProps<any> {
     receivedElevatorUpdate: (elevator: IElevator) => any;
 }
 
+/**
+ * Displays the current status of the elevators
+ * @param props { elevators, getElevators, receievedElevatorUpdate }
+ * @returns JSX element
+ */
 export const Elevators = (props: ElevatorsProps) => {
     const { getElevators, elevators, receivedElevatorUpdate } = props;
     let counter = 100;
@@ -53,7 +58,7 @@ export const Elevators = (props: ElevatorsProps) => {
     );
 };
 
-const mapStateToProps = (state: IReduxStore) => ({
+const mapStateToProps = (state: IState) => ({
     elevators: state.elevator
 });
 
