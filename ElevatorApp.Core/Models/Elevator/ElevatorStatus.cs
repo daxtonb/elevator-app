@@ -79,7 +79,7 @@ namespace ElevatorApp.Core
         public bool IsReady => CurrentState == State.Ready;
         public bool IsAtDestinationFloor => _currentRequest != null && _currentRequest.FloorNumber == CurrentFloor;
         public int OccupantsCount => _occupants.Count;
-        public double Capcity => Math.Round(_currentWeight / _maxWeight);
+        public double Capcity => Math.Round(((double)_currentWeight / _maxWeight) * 100);
 
         public State CurrentState 
         {
@@ -136,31 +136,41 @@ namespace ElevatorApp.Core
             {
                 var nextBoardRequest = GetNextBoardRequest();
                 var nextDisembarkRequest = GetNextDisembarkRequest();
-                var closestRequest = RequestHelper.GetClosestRequest(new Request[] { nextBoardRequest, nextDisembarkRequest }, this);
 
-                SetCurrentRequest(closestRequest);
+                // CONDITION: Elevator is not yet at full capacity. Assign next closest request. Otherwise,
+                // only service disembark requests.
+                if (Capcity < 100)
+                {
+                    _currentRequest = RequestHelper.GetClosestRequest(new Request[] { nextBoardRequest, nextDisembarkRequest }, this);
+                }
+                else
+                {
+                    _currentRequest = nextDisembarkRequest;
+                }
+
+                SetCurrentDirection();
             });
         }
 
         /// <summary>
-        /// Sets the current request for the elevator
+        /// Sets the current direction the elevator
         /// </summary>
         /// <param name="request">Request to set</param>
-        private void SetCurrentRequest(Request request)
+        private void SetCurrentDirection()
         {
-            if (request == null)
+            if (_currentRequest == null)
             {
                 CurrentDirection = Direction.None;
             }
-            else if (request.FloorNumber > CurrentFloor)
+            else if (_currentRequest.FloorNumber > CurrentFloor)
             {
                 CurrentDirection = Direction.Up;
             }
-            else if (request.FloorNumber < CurrentFloor)
+            else if (_currentRequest.FloorNumber < CurrentFloor)
             {
                 CurrentDirection = Direction.Down;
             }
-            else if (request is BoardRequest boardRequest)
+            else if (_currentRequest is BoardRequest boardRequest)
             {
                 CurrentDirection = boardRequest.Direction;
             }
@@ -168,8 +178,6 @@ namespace ElevatorApp.Core
             {
                 CurrentDirection = Direction.None;
             }
-
-            _currentRequest = request;
         }
 
         private Task RemoveRequestAsync(int floorNumber)

@@ -52,6 +52,9 @@ namespace ElevatorApp.Core
         /// </summary>
         private readonly List<DisembarkRequest> _disembarkRequests;
 
+        /// <summary>
+        /// Requests from occupants outside of the elevator
+        /// </summary>
         private readonly List<BoardRequest> _boardRequests;
 
         /// <summary>
@@ -102,7 +105,7 @@ namespace ElevatorApp.Core
         {
             return CurrentState != State.Moving                        // Elevator must not be moving
                     && occupant.CurrentFloor == occupant.CurrentFloor   // Occupant must be on the same floor as the stopped elevator
-                    && _currentWeight + occupant.Weight < _maxWeight;   // Occupant must not bring elevator over its weight capacity
+                    && _currentWeight + occupant.Weight <= _maxWeight;  // Occupant must not bring elevator over its weight capacity
         }
 
         /// <summary>
@@ -192,6 +195,9 @@ namespace ElevatorApp.Core
             }
         }
 
+        /// <summary>
+        /// Returns the next closest disembark request that is consistent with the elevator's current direction
+        /// </summary>
         private DisembarkRequest GetNextDisembarkRequest()
         {
             DisembarkRequest nextUp, nextAlongTheWay, nextDown;
@@ -225,7 +231,6 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Returns the next closest board request that is consistent with the elevator's current direction
         /// </summary>
-        /// <param name="elevator">Requesting elevator</param>
         private BoardRequest GetNextBoardRequest()
         {
             BoardRequest nextUp, nextAlongTheWay, nextDown;
@@ -266,6 +271,11 @@ namespace ElevatorApp.Core
             CurrentState = State.DoorsClosed;
             return SetNextRequestAsync();
         }
+
+        /// <summary>
+        /// Get all active disembark requests
+        /// </summary>
+        public IEnumerable<DisembarkRequest> GetDisembarkRequests() => _disembarkRequests;
 
         public override string ToString()
         {
