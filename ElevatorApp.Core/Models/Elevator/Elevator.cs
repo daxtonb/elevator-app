@@ -207,14 +207,22 @@ namespace ElevatorApp.Core
 
                 if (IsDirectionUp)
                 {
-                    nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber >= CurrentFloor);
+                    if (IsMoving)
+                        nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber > CurrentFloor + 1);
+                    else
+                        nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber >= CurrentFloor);
+                        
                     nextDown = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber < CurrentFloor);
 
                     return nextAlongTheWay ?? nextDown;
                 }
                 else if (IsDirectionDown)
                 {
-                    nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
+                    if (IsMoving)
+                        nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber < CurrentFloor - 1);
+                    else
+                        nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
+
                     nextUp = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber > CurrentFloor);
 
                     return nextAlongTheWay ?? nextUp;
