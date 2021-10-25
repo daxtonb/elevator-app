@@ -213,22 +213,7 @@ namespace ElevatorApp.Core
             }
 
             RequestedFloor = floorNumber;
-            return Elevator.AddDisembarkRequestAsync(new DisembarkRequest(floorNumber));
-        }
-
-        /// <summary>
-        /// Notify the occupant the elevator is ready. Enter the elevator if valid.
-        /// </summary>
-        /// <param name="elevator">Notifying elevator</param>
-        public async Task NotifyElevatorReadyAsync(Elevator elevator)
-        {
-            if (elevator.CanEnter(this))
-            {
-                await elevator.EnterAsync(this);
-                elevator.StateChanged += HandleElevatorStateChanged;
-                _elevator = elevator;
-                CurrentState = State.riding;
-            }
+            return Elevator.AddRequestAsync(new DisembarkRequest(floorNumber));
         }
 
         /// <summary>
@@ -240,10 +225,18 @@ namespace ElevatorApp.Core
         {
             if (eventArgs.NewState == Elevator.State.DoorsOpen)
             {
-                if (elevator.CanEnter(this) && CurrentState == State.waiting && elevator.CurrentFloor == CurrentFloor)
+                if (CurrentState == State.waiting && elevator.CurrentFloor == CurrentFloor)
                 {
-                    elevator.EnterAsync(this).Wait();
-                    CurrentState = State.riding;
+                    try
+                    {
+                        elevator.EnterAsync(this).Wait();
+                        _elevator = elevator;
+                        CurrentState = State.riding;
+                    }
+                    catch (Exception)
+                    {
+                        _building.LogMessage($"Elevator {elevator.Id}\tNo enough room!");
+                    }
                 }
                 else if (CurrentState == State.riding && elevator.CurrentFloor == RequestedFloor)
                 {

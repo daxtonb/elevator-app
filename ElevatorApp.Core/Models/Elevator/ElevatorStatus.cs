@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ElevatorApp.Core.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace ElevatorApp.Core
 {
@@ -75,7 +76,7 @@ namespace ElevatorApp.Core
         public bool IsDoorsOpen => CurrentState == State.DoorsOpen;
         public bool IsDoorsClosed => CurrentState == State.DoorsClosed;
         public bool IsReady => CurrentState == State.Ready;
-        public bool IsAtDestinationFloor => _currentRequest != null && _currentRequest.FloorNumber == CurrentFloor;
+        public bool IsAtDestinationFloor => _currentRequest != null && _currentRequest.FloorNumber == CurrentFloor && _currentHeight % _building.FloorHeight == 0;
         public int OccupantsCount => _occupants.Count;
         public double Capcity => Math.Round(((double)_currentWeight / _maxWeight) * 100);
 
@@ -184,45 +185,14 @@ namespace ElevatorApp.Core
                 CurrentDirection = Direction.None;
             }
         }
-
-        private Task RemoveRequestAsync(int floorNumber)
-        {
-            return Task.Run(() =>
-            {
-                lock (_boardRequestsLock)
-                {
-                    for (int i = 0; i < _boardRequests.Count; i++)
-                    {
-                        if (_boardRequests[i].FloorNumber == floorNumber)
-                        {
-                            _boardRequests.RemoveAt(i);
-                            break;
-                        }
-                    }
-
-                }
-
-                lock (_disembarkRequestsLock)
-                {
-                    for (int i = 0; i < _disembarkRequests.Count; i++)
-                    {
-                        if (_disembarkRequests[i].FloorNumber == floorNumber)
-                        {
-                            _disembarkRequests.RemoveAt(i);
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-
+        
         /// <summary>
         /// Adds occupant to the list of occupants
         /// </summary>
         /// <param name="occupant">Occupant to add to elevator</param>
         private Task AddOccupantAsync(Occupant occupant)
         {
-            return Task.Run(async () =>
+            return Task.Run(() =>
             {
                 lock (_occupantsLock)
                 {
@@ -232,7 +202,7 @@ namespace ElevatorApp.Core
                     }
                 }
 
-                await RemoveRequestAsync(CurrentFloor);
+                RemoveRequest<BoardRequest>(CurrentFloor);
             });
         }
 
@@ -247,6 +217,17 @@ namespace ElevatorApp.Core
                 lock (_occupantsLock)
                 {
                     _occupants.Remove(occupant);
+                }
+
+                RemoveRequest<DisembarkRequest>(CurrentFloor);
+
+                // Unflagged board requests now that room has been freed up
+                lock (_boardRequestsLock)
+                {
+                    foreach (var request in _boardRequests)
+                    {
+                        request.IsFlaggedForLater = false;
+                    }
                 }
             });
         }

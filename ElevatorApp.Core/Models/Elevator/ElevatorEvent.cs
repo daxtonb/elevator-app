@@ -100,45 +100,32 @@ namespace ElevatorApp.Core
 
             _isWorking = true;
 
-            if (IsAtDestinationFloor && _doorsOpenedDateTime == null)
+            if (IsAtDestinationFloor && _doorsOpenedDateTime == null && _currentRequest != null)
             {
                 CurrentState = State.Ready;
 
                 OpenDoors();
-
-                if (_currentRequest is BoardRequest boardRequest)
-                {
-                    _boardRequests.RemoveAll(r => r.FloorNumber == boardRequest.FloorNumber);
-                }
-                if (_currentRequest is DisembarkRequest disembarkRequest)
-                {
-                    _disembarkRequests.RemoveAll(r => r.FloorNumber == disembarkRequest.FloorNumber);
-                }
+                RemoveRequest<DisembarkRequest>(CurrentFloor);
 
                 _currentRequest = null;
             }
             else if (IsMoving)
             {
-
                 if (IsDirectionUp)
                 {
                     _currentHeight += (_maxSpeed * ((double)ElevatorConstants.ELAPSE_TIME / 1000));
-
-                    // CONDITION: Floor was changed
-                    if (_currentHeight % _building.FloorHeight == 0)
-                    {
-                        OnFloorChanged(new FloorChangedEventArgs(CurrentFloor));
-                    }
                 }
                 else
                 {
                     _currentHeight -= (_maxSpeed * ((double)ElevatorConstants.ELAPSE_TIME / 1000));
+                }
 
-                    // CONDITION: Floor was changed
-                    if (_currentHeight % _building.FloorHeight == 0)
-                    {
-                        OnFloorChanged(new FloorChangedEventArgs(CurrentFloor));
-                    }
+                                _building.LogMessage($"{_currentHeight}\t{_building.FloorHeight}\t{_currentHeight % _building.FloorHeight}");
+
+                // CONDITION: Floor was changed
+                if (_currentHeight % _building.FloorHeight == 0)
+                {
+                    OnFloorChanged(new FloorChangedEventArgs(CurrentFloor));
                 }
             }
 

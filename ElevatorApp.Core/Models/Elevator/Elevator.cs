@@ -122,7 +122,7 @@ namespace ElevatorApp.Core
         /// Enter occupant into elevator
         /// </summary>
         /// <param name="occupant">Requesting occupant</param>
-        public async Task EnterAsync(Occupant occupant)
+        public Task EnterAsync(Occupant occupant)
         {
             if (CanEnter(occupant))
             {
@@ -131,8 +131,14 @@ namespace ElevatorApp.Core
                     OpenDoors();
                 }
 
-                await AddOccupantAsync(occupant);
+                return AddOccupantAsync(occupant);
             }
+            else if (_currentRequest is BoardRequest boardRequest)
+            {
+                boardRequest.IsFlaggedForLater = true;
+            }
+
+            throw new Exception("Occupant cannot enter elevator");
         }
 
         /// <summary>
@@ -141,47 +147,65 @@ namespace ElevatorApp.Core
         /// <param name="occupant">Requesting occupant</param>
         public async void ExitAsync(Occupant occupant)
         {
-            if (!CanExit(occupant))
+            if (CanExit(occupant))
             {
-                throw new Exception("Occupant may not exit");
-            }
 
-            if (CurrentState == State.DoorsClosed)
-            {
-                OpenDoors();
-            }
+                if (CurrentState == State.DoorsClosed)
+                {
+                    OpenDoors();
+                }
 
-            await RemoveOccupantAsync(occupant);
+                await RemoveOccupantAsync(occupant);
+            }
         }
 
         /// <summary>
-        /// Add disembark request
-        /// </summary>
-        /// <param name="request">Reqeust to be added</param>
-        public Task AddDisembarkRequestAsync(DisembarkRequest request)
-        {
-            lock (_disembarkRequestsLock)
-            {
-                _disembarkRequests.Add(request);
-            }
-
-            OnRequestMade(new RequestMadeEventArgs(request));
-            return SetNextRequestAsync();
-        }
-
-        /// <summary>
-        /// Add board request
+        /// Add request to store
         /// </summary>
         /// <param name="request">Request to be added</param>
-        public Task AddBoardRequestAsync(BoardRequest request)
+        /// <typeparam name="T">Request</typeparam>
+        public Task AddRequestAsync<T>(T request) where T : Request
         {
-            lock (_boardRequestsLock)
+            if (request is BoardRequest boardRequest)
             {
-                _boardRequests.Add(request);
+                lock (_boardRequestsLock)
+                {
+                    _boardRequests.Add(boardRequest);
+                }
+            }
+            else if (request is DisembarkRequest disembarkRequest)
+            {
+                lock (_disembarkRequestsLock)
+                {
+                    _disembarkRequests.Add(disembarkRequest);
+                }
             }
 
             OnRequestMade(new RequestMadeEventArgs(request));
             return SetNextRequestAsync();
+        }
+
+        /// <summary>
+        /// Remove request from store
+        /// </summary>
+        /// <param name="floorNumber">Request to be removed</param>
+        /// <typeparam name="T">Request</typeparam>
+        public void RemoveRequest<T>(int floorNumber) where T : Request
+        {
+            if (typeof(T) == typeof(BoardRequest))
+            {
+                lock (_boardRequestsLock)
+                {
+                    _boardRequests.RemoveAll(r => r.FloorNumber == floorNumber);
+                }
+            }
+            else if (typeof(T) == typeof(DisembarkRequest))
+            {
+                lock (_disembarkRequestsLock)
+                {
+                    _disembarkRequests.RemoveAll(r => r.FloorNumber == floorNumber);
+                }
+            }
         }
 
         /// <summary>
@@ -251,8 +275,8 @@ namespace ElevatorApp.Core
 
             lock (_disembarkRequestsLock)
             {
-                var requestsOrderedAscending = _boardRequests.OrderBy(r => r.FloorNumber);
-                var requestsOrderedDescending = _boardRequests.OrderByDescending(r => r.FloorNumber);
+                var requestsOrderedAscending = _boardRequests.Where(r => !r.IsFlaggedForLater).OrderBy(r => r.FloorNumber);
+                var requestsOrderedDescending = _boardRequests.Where(r => !r.IsFlaggedForLater).OrderByDescending(r => r.FloorNumber);
 
                 if (IsDirectionUp)
                 {
@@ -272,7 +296,7 @@ namespace ElevatorApp.Core
                 }
                 else
                 {
-                    return RequestHelper.GetClosestRequest(_boardRequests, this) as BoardRequest;
+                    return RequestHelper.GetClosestRequest(_boardRequests.Where(r => !r.IsFlaggedForLater), this) as BoardRequest;
                 }
             }
         }

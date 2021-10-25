@@ -10,6 +10,11 @@ namespace ElevatorApp.Core
         /// </summary>
         public Elevator.Direction Direction { get; }
 
+        /// <summary>
+        /// Flags a request for later (i.e., elevator is full)
+        /// </summary>
+        public bool IsFlaggedForLater { get; set; } = false;
+
         /// <param name="occupant">Occupant making request</param>
         /// <param name="direction">Occupant's desired direction of travel</param>
         public BoardRequest(Occupant occupant, Elevator.Direction direction) : base(occupant.CurrentFloor)

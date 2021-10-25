@@ -63,31 +63,11 @@ namespace ElevatorApp.Core
             for (int i = 0; i < elevatorCount; i++)
             {
                 Elevators[i] = new Elevator(this, maxElevatorWeight);
-                Elevators[i].StateChanged += ElevatorStateChangedHandler;
                 Elevators[i].FloorChanged += ElevatorFloorChangedHandler;
                 Elevators[i].RequestMade += RequestMadeHandler;
             }
 
             _logger = logger;
-        }
-
-        /// <summary>
-        /// Notifies elevator occpuants if elevator is at requested floor with doors open
-        /// </summary>
-        /// <param name="elevator">Elevator that changed state</param>
-        /// <param name="eventArgs">Event arguments</param>
-        public void ElevatorStateChangedHandler(Elevator elevator, Elevator.StateChangedEventArgs eventArgs)
-        {
-            if (eventArgs.NewState == Elevator.State.DoorsOpen)
-            {
-                foreach (var occupant in Occupants)
-                {
-                    if (occupant.CurrentState == Occupant.State.waiting && occupant.CurrentFloor == elevator.CurrentFloor)
-                    {
-                        occupant.NotifyElevatorReadyAsync(elevator).Wait();
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -125,7 +105,7 @@ namespace ElevatorApp.Core
             return Task.Run(() =>
             {
                 var elevator = ChooseElevator(request) ?? Elevators.First();
-                elevator.AddBoardRequestAsync(request);
+                elevator.AddRequestAsync(request);
             });
         }
 
