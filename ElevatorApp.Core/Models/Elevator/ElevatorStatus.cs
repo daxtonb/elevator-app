@@ -8,12 +8,10 @@ using ElevatorApp.Core.Utils;
 namespace ElevatorApp.Core
 {
     /// <summary>
-    /// Deals with elevator status
+    /// This partial class handles all things concerning the elevator's status
     /// </summary>
     public partial class Elevator
     {
-
-
         /// <summary>
         /// Lock for thread-safe acces to the elevator's current state
         /// </summary>
@@ -81,6 +79,9 @@ namespace ElevatorApp.Core
         public int OccupantsCount => _occupants.Count;
         public double Capcity => Math.Round(((double)_currentWeight / _maxWeight) * 100);
 
+        /// <summary>
+        /// Current state of elevator
+        /// </summary>
         public State CurrentState 
         {
             private set 
@@ -104,7 +105,10 @@ namespace ElevatorApp.Core
                 }
             }
         }
-   
+
+        /// <summary>
+        /// Current direction of elevator
+        /// </summary>
         public Direction CurrentDirection
         {
             private set 
@@ -118,6 +122,7 @@ namespace ElevatorApp.Core
                     DirectionChanged?.Invoke(this, new DirectionChangedEventArgs(value));
                 }
             }
+
             get 
             {
                 lock (_currentDirectionLock)

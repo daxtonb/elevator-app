@@ -124,7 +124,7 @@ namespace ElevatorApp.Core
         {
             return Task.Run(() =>
             {
-                var elevator = ChooseElevator(request);
+                var elevator = ChooseElevator(request) ?? Elevators.First();
                 elevator.AddBoardRequestAsync(request);
             });
         }

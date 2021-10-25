@@ -4,7 +4,7 @@ using System.Timers;
 namespace ElevatorApp.Core
 {
     /// <summary>
-    /// Contains the events for Eelvator
+    /// This partial class contains the events for Eelvator
     /// </summary>
     public partial class Elevator
     {

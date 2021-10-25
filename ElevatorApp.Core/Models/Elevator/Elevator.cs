@@ -124,17 +124,15 @@ namespace ElevatorApp.Core
         /// <param name="occupant">Requesting occupant</param>
         public async Task EnterAsync(Occupant occupant)
         {
-            if (!CanEnter(occupant))
+            if (CanEnter(occupant))
             {
-                throw new Exception("Occupant may not enter");
-            }
+                if (_currentState == State.DoorsClosed)
+                {
+                    OpenDoors();
+                }
 
-            if (_currentState == State.DoorsClosed)
-            {
-                OpenDoors();
+                await AddOccupantAsync(occupant);
             }
-
-            await AddOccupantAsync(occupant);
         }
 
         /// <summary>
@@ -156,6 +154,10 @@ namespace ElevatorApp.Core
             await RemoveOccupantAsync(occupant);
         }
 
+        /// <summary>
+        /// Add disembark request
+        /// </summary>
+        /// <param name="request">Reqeust to be added</param>
         public Task AddDisembarkRequestAsync(DisembarkRequest request)
         {
             lock (_disembarkRequestsLock)
@@ -167,6 +169,10 @@ namespace ElevatorApp.Core
             return SetNextRequestAsync();
         }
 
+        /// <summary>
+        /// Add board request
+        /// </summary>
+        /// <param name="request">Request to be added</param>
         public Task AddBoardRequestAsync(BoardRequest request)
         {
             lock (_boardRequestsLock)

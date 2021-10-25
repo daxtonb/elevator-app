@@ -240,7 +240,7 @@ namespace ElevatorApp.Core
         {
             if (eventArgs.NewState == Elevator.State.DoorsOpen)
             {
-                if (CurrentState == State.waiting && elevator.CurrentFloor == CurrentFloor)
+                if (elevator.CanEnter(this) && CurrentState == State.waiting && elevator.CurrentFloor == CurrentFloor)
                 {
                     elevator.EnterAsync(this).Wait();
                     CurrentState = State.riding;
