@@ -65,7 +65,7 @@ function getStateText(state: OccupantState): string {
         case OccupantState.riding:
             return 'Riding';
         case OccupantState.waiting:
-            return 'waiting';
+            return 'Waiting';
         default:
             return '';
     }
