@@ -7,9 +7,11 @@ import IState from '../utils/data-contracts/IState';
 import { ElevatorState } from '../utils/enums/ElevatorState';
 import ChangeHighlight from "react-change-highlight";
 import { Direction } from '../utils/enums/Direction';
+import IOccupant from '../utils/data-contracts/IOccupant';
 
 export interface ElevatorsProps extends ComponentProps<any> {
     elevators: IElevator[];
+    occupant: IOccupant | null;
     getElevators: () => any;
     receivedElevatorUpdate: (elevator: IElevator) => any;
 }
@@ -20,8 +22,15 @@ export interface ElevatorsProps extends ComponentProps<any> {
  * @returns JSX element
  */
 export const Elevators = (props: ElevatorsProps) => {
-    const { getElevators, elevators, receivedElevatorUpdate } = props;
+    const { getElevators, elevators, receivedElevatorUpdate, occupant } = props;
     let counter = 100;
+
+    const getRowStyle = (elevator: IElevator): React.CSSProperties | undefined => {
+        if (occupant && occupant.elevatorId === elevator.id) {
+            return { backgroundColor: 'lightgray' };
+        }
+        return undefined;
+    };
 
     useEffect(() => {
         if (!elevators || !elevators.length) {
@@ -49,7 +58,7 @@ export const Elevators = (props: ElevatorsProps) => {
                 </thead>
                 <tbody>
                     {elevators.sort((a, b) => a.id - b.id).map((elevator, index) =>
-                        <tr key={counter++}>
+                        <tr style={getRowStyle(elevator)} key={counter++}>
                             <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{elevator.id}</span></ChangeHighlight></td>
                             <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{elevator.currentFloor}</span></ChangeHighlight></td>
                             <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{getStateText(elevator.state)}</span></ChangeHighlight></td>
@@ -92,7 +101,8 @@ function getDirectionText(direction: Direction): string {
 }
 
 const mapStateToProps = (state: IState) => ({
-    elevators: state.elevator
+    elevators: state.elevator,
+    occupant: state.occupant
 });
 
 const mapDispatchToProps = {
