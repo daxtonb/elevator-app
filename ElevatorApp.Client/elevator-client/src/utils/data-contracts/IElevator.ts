@@ -29,4 +29,8 @@ export interface IElevator {
     * Direction elevator is moving
     */
    currentDirection: Direction;
+   /**
+    * Active requests from inside the elevator
+    */
+   activeRequests: { floorNumber: number; }[];
 }
