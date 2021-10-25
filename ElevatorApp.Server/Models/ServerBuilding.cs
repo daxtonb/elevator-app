@@ -1,5 +1,8 @@
+using System;
+using System.IO;
 using ElevatorApp.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ElevatorApp.Server.Models
 {
@@ -8,11 +11,31 @@ namespace ElevatorApp.Server.Models
     /// </summary>
     public class ServerBuilding : Building
     {
-        public ServerBuilding(IConfiguration config) 
+        private static readonly string _logFilePath = Path.Combine(Environment.CurrentDirectory, "log.txt");
+
+        public ServerBuilding(IConfiguration config, ILogger<Building> logger) 
             : base(
                 config.GetValue<int>("Building:FloorCount"), 
                 config.GetValue<int>("Building:ElevatorCount"), 
-                config.GetValue<int>("Building:MaxElevatorWeight"))
-        { }
+                config.GetValue<int>("Building:MaxElevatorWeight"),
+                logger)
+        { 
+            // Create file for logging
+            using (var writer = File.Create(_logFilePath))
+            {
+                 writer.Close();
+            }
+        }
+
+        public override void LogMessage(string message, LogLevel level = LogLevel.Information)
+        {
+            base.LogMessage(message, level);
+
+            message = $"{DateTime.Now.ToString("hh:mm:ss")} | {message}";
+            using (StreamWriter writer = File.AppendText(_logFilePath))
+            {
+                 writer.WriteLine(message);
+            }
+        }
     }
 }

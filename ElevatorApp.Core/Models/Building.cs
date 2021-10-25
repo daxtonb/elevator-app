@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElevatorApp.Core.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace ElevatorApp.Core
 {
@@ -32,9 +33,11 @@ namespace ElevatorApp.Core
         /// </summary>
         public double FloorHeight { get; } = ElevatorConstants.FLOOR_HEIGHT;
 
+        private readonly ILogger<Building> _logger;
+
         /// <param name="floorCount">Total number of floors for building</param>
         /// <param name="elevatorCount">Total number of elevators for building</param>
-        public Building(int floorCount, int elevatorCount, double maxElevatorWeight)
+        public Building(int floorCount, int elevatorCount, double maxElevatorWeight, ILogger<Building> logger = null)
         {
             if (floorCount <= 1)
             {
@@ -61,9 +64,19 @@ namespace ElevatorApp.Core
             {
                 Elevators[i] = new Elevator(this, maxElevatorWeight);
                 Elevators[i].StateChanged += ElevatorStateChangedHandler;
+                Elevators[i].FloorChanged += ElevatorFloorChangedHandler;
+                Elevators[i].RequestMade += RequestMadeHandler;
             }
+
+            _logger = logger;
+            LogMessage("Building initialized.");
         }
 
+        /// <summary>
+        /// Notifies elevator occpuants if elevator is at requested floor with doors open
+        /// </summary>
+        /// <param name="elevator">Elevator that changed state</param>
+        /// <param name="eventArgs">Event arguments</param>
         public void ElevatorStateChangedHandler(Elevator elevator, Elevator.StateChangedEventArgs eventArgs)
         {
             if (eventArgs.State == Elevator.State.DoorsOpen)
@@ -76,6 +89,28 @@ namespace ElevatorApp.Core
                     }
                 }
             }
+
+            LogMessage($"Elevator {elevator.Id}\tState: {eventArgs.State}");
+        }
+
+        /// <summary>
+        /// Logs floor change
+        /// </summary>
+        /// <param name="elevator">Elevator that changed floors</param>
+        /// <param name="eventArgs">Event arguments</param>
+        public void ElevatorFloorChangedHandler(Elevator elevator, Elevator.FloorChangedEventArgs eventArgs)
+        {
+            LogMessage($"Elevator {elevator.Id}\tReached Floor: {eventArgs.FloorNumber}");
+        }
+
+        /// <summary>
+        /// Logs requests made to elevator
+        /// </summary>
+        /// <param name="elevator">Elevator that processed request</param>
+        /// <param name="eventArgs">Event arguments</param>
+        public void RequestMadeHandler(Elevator elevator, Elevator.RequestMadeEventArgs eventArgs)
+        {
+            LogMessage($"Elevator {elevator.Id}\tRequested floor: {eventArgs.Request.FloorNumber}");
         }
 
         /// <summary>
@@ -157,9 +192,33 @@ namespace ElevatorApp.Core
             return closest;
         }
 
+        /// <summary>
+        /// Building dispatches request to elevator
+        /// </summary>
+        /// <param name="occupant">Requesting occupant</param>
+        /// <param name="direction">Requested direction</param>
         public Task RequestAsync(Occupant occupant, Elevator.Direction direction)
         {
             return DispatchRequest(new BoardRequest(occupant, direction));
+        }
+
+        /// <summary>
+        /// Logs a message using a specified logger, or console if not specified
+        /// </summary>
+        /// <param name="message">Message to log</param>
+        /// <param name="level">Log level</param>
+        public virtual void LogMessage(string message, LogLevel level = LogLevel.Information)
+        {
+            message = $"{DateTime.Now.ToString("hh:mm:ss")} | {message}";
+
+            if (_logger == null)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                _logger.Log(level, message);
+            }
         }
     }
 }

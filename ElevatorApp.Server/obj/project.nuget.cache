@@ -1,10 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "XS/HXvhdRM9AJclc0rXrEqN4x2UkHAW9U1SiuqKMgPooTaGJTkr+bliPauA4TYjJjNO1aaN+lO6MXK372QOGiA==",
+  "dgSpecHash": "+6tAir3wW3Azg3BpMB1KGgoWFCPkF3IhWklSOVJ7GR/ontdg2rk+CxGRE4/XK99yCQmgY3eXRQPaD1EjFrqSAQ==",
   "success": true,
   "projectFilePath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Server/ElevatorApp.Server.csproj",
   "expectedPackageFiles": [
     "/home/dax/.nuget/packages/microsoft.extensions.apidescription.server/3.0.0/microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.dependencyinjection/5.0.0/microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.logging/5.0.0/microsoft.extensions.logging.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.logging.abstractions/5.0.0/microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.options/5.0.0/microsoft.extensions.options.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.primitives/5.0.0/microsoft.extensions.primitives.5.0.0.nupkg.sha512",
     "/home/dax/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
     "/home/dax/.nuget/packages/swashbuckle.aspnetcore/5.6.3/swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
     "/home/dax/.nuget/packages/swashbuckle.aspnetcore.swagger/5.6.3/swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",

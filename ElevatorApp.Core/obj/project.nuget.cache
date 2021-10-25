@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "y5AxCgm1/qNsJWP8Yh+BAjilM+wz3KPPUnD/PAttpz5aNk/QTOW1eLq6wV+2T9ucbCq6GcKKH7/MJYEAMZ3Mow==",
+  "dgSpecHash": "XvfMux+DOCgBy/fBxVhfnLcmzjLG+WBhkJbBPNZs4jfBElVnfUDvAjz2RBuzE6DTPdMQMTyhxjUq+fyA5Gp+kA==",
   "success": true,
   "projectFilePath": "/home/dax/Documents/Development/elevator-app/ElevatorApp.Core/ElevatorApp.Core.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/home/dax/.nuget/packages/microsoft.extensions.dependencyinjection/5.0.0/microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/5.0.0/microsoft.extensions.dependencyinjection.abstractions.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.logging/5.0.0/microsoft.extensions.logging.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.logging.abstractions/5.0.0/microsoft.extensions.logging.abstractions.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.options/5.0.0/microsoft.extensions.options.5.0.0.nupkg.sha512",
+    "/home/dax/.nuget/packages/microsoft.extensions.primitives/5.0.0/microsoft.extensions.primitives.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

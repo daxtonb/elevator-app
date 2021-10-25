@@ -163,6 +163,7 @@ namespace ElevatorApp.Core
                 _disembarkRequests.Add(request);
             }
 
+            OnRequestMade(new RequestMadeEventArgs(request));
             return SetNextRequestAsync();
         }
 
@@ -173,6 +174,7 @@ namespace ElevatorApp.Core
                 _boardRequests.Add(request);
             }
 
+            OnRequestMade(new RequestMadeEventArgs(request));
             return SetNextRequestAsync();
         }
 

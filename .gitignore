@@ -9,3 +9,4 @@ ElevatorApp.Server/obj/Debug/
 ElevatorApp.Test/obj/Debug/
 
 ElevatorApp.Client/node_modules/
+ElevatorApp.Server/log.txt

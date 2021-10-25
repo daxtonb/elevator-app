@@ -67,6 +67,26 @@ namespace ElevatorApp.Core
         }
 
         /// <summary>
+        /// Request made event
+        /// </summary>
+        public delegate void RequestMadeHandler(Elevator elevator, RequestMadeEventArgs eventArgs);
+        public event RequestMadeHandler RequestMade;
+        public class RequestMadeEventArgs : EventArgs
+        {
+            public Request Request { get; }
+
+            public RequestMadeEventArgs(Request request)
+            {
+                Request = request;
+            }
+        }
+        protected virtual void OnRequestMade(RequestMadeEventArgs eventArgs)
+        {
+            var handler = RequestMade;
+            handler?.Invoke(this, eventArgs);
+        }
+
+        /// <summary>
         /// Logic for updating elevator state, direction, and floor
         /// </summary>
         private void OnTimeElapsed(object source, ElapsedEventArgs eventArgs)
