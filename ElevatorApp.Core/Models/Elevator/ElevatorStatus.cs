@@ -92,7 +92,6 @@ namespace ElevatorApp.Core
                     StateChanged?.Invoke(this, new StateChangedEventArgs(_currentState, value));
                     lock (_currentStateLock)
                     {
-                        _building.LogMessage($"state: {_currentState}->{value}");
                         _currentState = value;
                     }
                 }
@@ -153,7 +152,7 @@ namespace ElevatorApp.Core
                 {
                     _currentRequest = nextDisembarkRequest;
                 }
-                _building.LogMessage($"{Id}\tb {nextBoardRequest?.FloorNumber}/{_boardRequests.Count}\td {nextDisembarkRequest?.FloorNumber}/{_disembarkRequests.Count}\tc {_currentRequest?.FloorNumber}");
+
                 SetCurrentDirection();
             });
         }

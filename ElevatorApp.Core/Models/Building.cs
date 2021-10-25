@@ -106,7 +106,6 @@ namespace ElevatorApp.Core
             {
                 var elevator = ChooseElevator(request) ?? Elevators.First();
                 elevator.AddRequestAsync(request);
-                LogMessage($"Elevator {elevator?.Id} \t{request.FloorNumber}\t{request.IsFlaggedForLater}");
             });
         }
 
