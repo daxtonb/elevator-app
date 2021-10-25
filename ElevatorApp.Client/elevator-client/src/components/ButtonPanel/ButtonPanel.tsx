@@ -36,6 +36,7 @@ export const ButtonPanel = (props: ButtonPanelProps) => {
     if (occupant && building) {
         return (
             <div>
+                {occupant.currentState !== OccupantState.waiting && <h2>Make a selection:</h2>}
                 {occupant.currentState === OccupantState.riding && <ElevatorPanel floorCount={building.floorCount} />}
                 {occupant.currentState === OccupantState.none && <FloorPanel />}
             </div>
