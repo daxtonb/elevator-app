@@ -8,6 +8,8 @@ namespace ElevatorApp.Core
     /// </summary>
     public partial class Elevator
     {
+        private bool _isWorking;
+
         /// <summary>
         /// State change event
         /// </summary>
@@ -69,10 +71,29 @@ namespace ElevatorApp.Core
         /// </summary>
         private void OnTimeElapsed(object source, ElapsedEventArgs eventArgs)
         {
+            if (_isWorking)
+            {
+                return;
+            }
+
+            _isWorking = true;
+
             if (IsAtDestinationFloor && _doorsOpenedDateTime == null)
             {
                 CurrentState = State.Ready;
+
                 OpenDoors();
+
+                if (_currentRequest is BoardRequest boardRequest)
+                {
+                    _boardRequests.RemoveAll(r => r.FloorNumber == boardRequest.FloorNumber);
+                }
+                if (_currentRequest is DisembarkRequest disembarkRequest)
+                {
+                    _disembarkRequests.RemoveAll(r => r.FloorNumber == disembarkRequest.FloorNumber);
+                }
+
+                _currentRequest = null;
             }
             else if (IsMoving)
             {
@@ -115,7 +136,14 @@ namespace ElevatorApp.Core
                 {
                     CurrentState = State.Moving;
                 }
+                else if (OccupantsCount == 0)
+                {
+                    CurrentState = State.Ready;
+                    CurrentDirection = Direction.None;
+                }
             }
+
+            _isWorking = false;
         }
     }
 }
