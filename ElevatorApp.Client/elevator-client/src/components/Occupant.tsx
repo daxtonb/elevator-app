@@ -48,7 +48,7 @@ export const Occupant = (props: ElevatorsProps) => {
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.currentFloor}</span></ChangeHighlight></td>
                             <td><ChangeHighlight><span ref={React.createRef()}>{getStateText(occupant.currentState)}</span></ChangeHighlight></td>
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.requestedFloor}</span></ChangeHighlight></td>
-                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.elevatorId ? `Elevator ${occupant.id}` : 'Floor'}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.elevatorId ? `Elevator ${occupant.elevatorId}` : 'Floor'}</span></ChangeHighlight></td>
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.weight}</span></ChangeHighlight></td>
                         </tr>
                     </tbody>
