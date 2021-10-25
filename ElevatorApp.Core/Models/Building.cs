@@ -69,7 +69,6 @@ namespace ElevatorApp.Core
             }
 
             _logger = logger;
-            LogMessage("Building initialized.");
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace ElevatorApp.Core
         /// <param name="eventArgs">Event arguments</param>
         public void ElevatorStateChangedHandler(Elevator elevator, Elevator.StateChangedEventArgs eventArgs)
         {
-            if (eventArgs.State == Elevator.State.DoorsOpen)
+            if (eventArgs.NewState == Elevator.State.DoorsOpen)
             {
                 foreach (var occupant in Occupants)
                 {
@@ -89,8 +88,6 @@ namespace ElevatorApp.Core
                     }
                 }
             }
-
-            LogMessage($"Elevator {elevator.Id}\tState: {eventArgs.State}");
         }
 
         /// <summary>
@@ -100,7 +97,13 @@ namespace ElevatorApp.Core
         /// <param name="eventArgs">Event arguments</param>
         public void ElevatorFloorChangedHandler(Elevator elevator, Elevator.FloorChangedEventArgs eventArgs)
         {
-            LogMessage($"Elevator {elevator.Id}\tReached Floor: {eventArgs.FloorNumber}");
+            if (elevator.IsMoving && elevator.CurrentFloor != elevator.RequestedFloor)
+            {
+                LogMessage($"Elevator {elevator.Id}\tPassing Floor: {eventArgs.FloorNumber}");
+            } else
+            {
+                LogMessage($"Elevator {elevator.Id}\tStopped at Floor {elevator.CurrentFloor}");
+            }
         }
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace ElevatorApp.Core
         /// <param name="eventArgs">Event arguments</param>
         public void RequestMadeHandler(Elevator elevator, Elevator.RequestMadeEventArgs eventArgs)
         {
-            LogMessage($"Elevator {elevator.Id}\tRequested floor: {eventArgs.Request.FloorNumber}");
+            LogMessage($"Elevator {elevator.Id}\tRequested floor: {eventArgs.Request.FloorNumber} ({(eventArgs.Request is BoardRequest ? "from floor" : "from elevator")})");
         }
 
         /// <summary>

@@ -238,7 +238,7 @@ namespace ElevatorApp.Core
         /// <param name="eventArgs">Event arguments</param>
         public void HandleElevatorStateChanged(Elevator elevator, Elevator.StateChangedEventArgs eventArgs)
         {
-            if (eventArgs.State == Elevator.State.DoorsOpen)
+            if (eventArgs.NewState == Elevator.State.DoorsOpen)
             {
                 if (CurrentState == State.waiting && elevator.CurrentFloor == CurrentFloor)
                 {

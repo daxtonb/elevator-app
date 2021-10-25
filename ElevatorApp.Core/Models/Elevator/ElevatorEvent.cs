@@ -17,11 +17,13 @@ namespace ElevatorApp.Core
         public event StateChangedHandler StateChanged;
         public class StateChangedEventArgs : EventArgs
         {
-            public State State { get; }
+            public State PreviousState { get; }
+            public State NewState { get; }
 
-            public StateChangedEventArgs(State state)
+            public StateChangedEventArgs(State previousState, State newState)
             {
-                State = state;
+                PreviousState = previousState;
+                NewState = newState;
             }
         }
 

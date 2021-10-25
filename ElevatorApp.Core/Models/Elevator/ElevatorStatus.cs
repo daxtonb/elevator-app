@@ -69,7 +69,7 @@ namespace ElevatorApp.Core
         /// The current floor that the elevator is located. Starts on ground level.
         /// </summary>
         public int CurrentFloor => (int)Math.Floor(_currentHeight / _building.FloorHeight) + 1;
-
+        public int? RequestedFloor => _currentRequest?.FloorNumber;
         public bool IsDirectionUp => CurrentDirection == Direction.Up;
         public bool IsDirectionDown => CurrentDirection == Direction.Down;
         public bool IsNoDirection => CurrentDirection == Direction.None;
@@ -87,12 +87,12 @@ namespace ElevatorApp.Core
             {
                 if (_currentState != value)
                 {
+                    StateChanged?.Invoke(this, new StateChangedEventArgs(_currentState, value));
 
                     lock (_currentStateLock)
                     {
                         _currentState = value;
                     }
-                    StateChanged?.Invoke(this, new StateChangedEventArgs(value));
                 }
             }
 
