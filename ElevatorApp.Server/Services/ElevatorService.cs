@@ -34,8 +34,14 @@ namespace ElevatorApp.Server.Services
 
         public async void SendOccupantUpdate(Occupant occupant, EventArgs eventArgs)
         {
-            var client = ElevatorHub.OccupantsByConnectionId.First(o => o.Value.Id == occupant.Id);
-            await _hub.Clients.Client(client.Key).SendAsync("OccupantUpdated", OccupantViewModel.From(occupant));
+            foreach (var item in ElevatorHub.OccupantsByConnectionId)
+            {
+                if (item.Value.Id == occupant.Id)
+                {
+                    await _hub.Clients.Client(item.Key).SendAsync("OccupantUpdated", OccupantViewModel.From(occupant));
+                    break;
+                }
+            }
         }
     }
 }
