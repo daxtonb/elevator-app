@@ -35,7 +35,7 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Current weight of elevator
         /// </summary>
-        private double _currentWeight = 0;
+        private double _currentWeight => _occupants.Sum(o => o.Weight);
 
         /// <summary>
         /// Maximum speed of the elevator, measured in feet per second
@@ -135,7 +135,6 @@ namespace ElevatorApp.Core
             }
 
             await AddOccupantAsync(occupant);
-            _currentWeight += occupant.Weight;
         }
 
         /// <summary>
@@ -155,7 +154,6 @@ namespace ElevatorApp.Core
             }
 
             await RemoveOccupantAsync(occupant);
-            _currentWeight -= occupant.Weight;
         }
 
         public Task AddDisembarkRequestAsync(DisembarkRequest request)
