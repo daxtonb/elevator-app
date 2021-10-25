@@ -1,5 +1,5 @@
 # Elevator App
-Elevator App is an event-driven application that simulates a basic elevator. This project is  composed of four parts: the Core class library, the ASP.NET Server, the React.js Client, and the Test testing framework.
+Elevator App is an event-driven application that simulates a basic elevator. This project is  composed of four parts: the Core class library, the ASP.NET Core Server, the React.js Client, and the Test testing framework.
 
 ## Usage
 First, navigate to the ElevatorApp.Server directory and run the command.
