@@ -7,6 +7,7 @@ namespace ElevatorApp.Core
         public int? RequestedFloor { get; set; }
         public Occupant.State CurrentState { get; set; }
         public int? ElevatorId { get; set; }
+        public double Weight { get; set; }
 
         public static OccupantViewModel From(Occupant occupant)
         {
@@ -16,7 +17,8 @@ namespace ElevatorApp.Core
                 CurrentFloor = occupant.CurrentFloor,
                 RequestedFloor = occupant.RequestedFloor,
                 CurrentState = occupant.CurrentState,
-                ElevatorId = occupant.Elevator?.Id
+                ElevatorId = occupant.Elevator?.Id,
+                Weight = occupant.Weight
             };
         }
     }
