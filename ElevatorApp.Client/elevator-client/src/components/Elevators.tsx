@@ -55,7 +55,7 @@ export const Elevators = (props: ElevatorsProps) => {
                             <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{getStateText(elevator.state)}</span></ChangeHighlight></td>
                             <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{getDirectionText(elevator.currentDirection)}</span></ChangeHighlight></td>
                             <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{elevator.occupantCount}</span></ChangeHighlight></td>
-                            <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{elevator.capacity}</span></ChangeHighlight></td>
+                            <td key={counter++}><ChangeHighlight><span ref={React.createRef()}>{elevator.capacity}%</span></ChangeHighlight></td>
                         </tr>)}
                 </tbody>
             </table>
