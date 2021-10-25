@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ElevatorApp.Core;
@@ -44,13 +46,19 @@ namespace ElevatorApp.Test
             }
         }
 
+        /// <summary>
+        /// An occupant should be able to board an available elevator
+        /// </summary>
         [Fact]
-        public async void Occupant_Can_Enter_Stopped_Elevator_On_Same_Floor()
+        public async void Occupant_Can_Board_Elevator()
         {
             var occupant = factory.CreateOccupant();
             await TestIsInElevatorAsync(occupant);
         }
 
+        /// <summary>
+        /// An occupant inside an elevator should be able to request a floor
+        /// </summary>
         [Fact]
         public async void Occupant_Can_Request_Floor_Inside_Elevator()
         {
@@ -60,6 +68,9 @@ namespace ElevatorApp.Test
             await TestElevatorIsMovingAsync(occupant, floorNumber);
         }
 
+        /// <summary>
+        /// An occupant should exit elevator once destination floor is reached
+        /// </summary>
         [Fact]
         public async void Occupant_Exits_Elevator_On_Requested_Floor()
         {
@@ -69,6 +80,10 @@ namespace ElevatorApp.Test
             await TestOccupantExitsOnRequestedFloor(occupant, floorNumber);
         }
 
+        /// <summary>
+        /// An elevator should make stops at floor in sequence regardless of the order requests were submitted
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async void Elevator_Stops_In_Sequence_Of_Direction()
         {
@@ -103,6 +118,9 @@ namespace ElevatorApp.Test
             Assert.Equal(stop2, floor1);
         }
 
+        /// <summary>
+        /// Elevator wills top at floor that is along the way to original destination floor
+        /// </summary>
         [Fact]
         public async void Elevator_Stops_For_Intermittent_Floor_Request()
         {
@@ -175,6 +193,40 @@ namespace ElevatorApp.Test
             Assert.NotNull(stop1);
             Assert.NotNull(stop2);
             Assert.True(stop1 > stop2, $"stop1: {stop1}, stop2: {stop2}");
+        }
+
+        /// <summary>
+        /// An elevator that cannot fit the requesting occupant will return to occupant after an occupant exits
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async void Full_Elevator_Returns()
+        {
+            // Given
+            var building = factory.CreateBuilding();
+            var occupantWaiting = factory.CreateOccupant(building);
+            var occupants = new List<Occupant>();
+            int floorNumber = 2;
+            // Fill up all of the elevators as much as possible
+            do
+            {
+                var occupant = factory.CreateOccupant(building);
+                await RequestElevatorAsync(occupant, Elevator.Direction.Up);
+                occupants.Add(occupant);
+            } while (building.Elevators.Count(e => e.Capcity == 100) != building.Elevators.Length);
+
+            var occupantInElevator = occupants.First();
+
+            // When
+
+            // Have waiting occupant place an elevator request
+            await RequestElevatorAsync(occupantWaiting, Elevator.Direction.Up);
+            // Have occupant inside elevator request a floor
+            await RequestFloorAsync(occupantInElevator, floorNumber);
+            Thread.Sleep(Convert.ToInt32((ElevatorConstants.FLOOR_HEIGHT / ElevatorConstants.MAX_SPEED) * (floorNumber * 2) + (ElevatorConstants.TIME_TO_CLOSE_DOORS)) * 1000);
+            
+            // Then
+            Assert.NotNull(occupantWaiting.Elevator);
         }
 
         private async Task RequestElevatorAsync(Occupant occupant, Elevator.Direction direction)

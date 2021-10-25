@@ -6,7 +6,7 @@ namespace ElevatorApp.Test
     public class MockFactory
     {
         private static readonly double _defaultOccupantWeight = 150;
-        private static readonly double _defaultElevatorMaxWeight = 1000;
+        private static readonly double _defaultElevatorMaxWeight = 300;
         private static readonly int _defaultFloorCount = 10;
         private static readonly int _defaultElevatorCount = 2;
 

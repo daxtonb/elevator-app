@@ -23,7 +23,7 @@ namespace ElevatorApp.Test
         public override void LogMessage(string message, LogLevel level = LogLevel.Information)
         {
             base.LogMessage(message, level);
-
+            
             message = $"{(DateTime.Now - StartTime).ToString()} | {message}";
             using (StreamWriter writer = File.AppendText(_logFilePath))
             {
