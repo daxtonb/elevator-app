@@ -2,7 +2,7 @@
 Elevator App is an event-driven application that simulates a basic elevator. This project is composed of four parts: the `Core` class library, the ASP.NET Core `Server`, the React.js `Client`, and the `Test` xUnit unit test project.
 
 ## Usage
-First, navigate to the `ElevatorApp.Server` directory and run the command.
+First, navigate to the `ElevatorApp.Server` directory via your operating system's terminal and run the command
 ```
 dotnet run
 ```
@@ -11,7 +11,7 @@ Some settings are customizable by updating the "Building" portion of `appsetting
 During runtime, all server logs are written to `log.txt` in the `ElevatorApp.Server` folder.
 
 
-Next, navigate to the `ElevatorApp.Client/client-app` directory and run the following commands.
+Next, open a new terminal and navigate to the `ElevatorApp.Client/client-app` directory and run the following commands
 ```
 npm install
 npm start
