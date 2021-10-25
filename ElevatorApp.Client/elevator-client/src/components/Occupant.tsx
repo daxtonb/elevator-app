@@ -35,20 +35,20 @@ export const Occupant = (props: ElevatorsProps) => {
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Status</th>
                             <th>Current Floor</th>
-                            <th>Elevator ID</th>
+                            <th>Status</th>
                             <th>Requested Floor</th>
+                            <th>Location</th>
                             <th>Weight</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.id}</span></ChangeHighlight></td>
-                            <td><ChangeHighlight><span ref={React.createRef()}>{getStateText(occupant.currentState)}</span></ChangeHighlight></td>
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.currentFloor}</span></ChangeHighlight></td>
-                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.elevatorId}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{getStateText(occupant.currentState)}</span></ChangeHighlight></td>
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.requestedFloor}</span></ChangeHighlight></td>
+                            <td><ChangeHighlight><span ref={React.createRef()}>{occupant.elevatorId ? `Elevator ${occupant.id}` : 'Floor'}</span></ChangeHighlight></td>
                             <td><ChangeHighlight><span ref={React.createRef()}>{occupant.weight}</span></ChangeHighlight></td>
                         </tr>
                     </tbody>
