@@ -128,7 +128,7 @@ namespace ElevatorApp.Core
                 _doorsOpenedDateTime = null;
             }
             // CONDITION: Doors are closed
-            else if (IsDoorsClosed)
+            else if (IsDoorsClosed || IsReady)
             {
                 SetNextRequestAsync().Wait();
 
