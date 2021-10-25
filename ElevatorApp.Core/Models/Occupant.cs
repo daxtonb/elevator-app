@@ -248,7 +248,12 @@ namespace ElevatorApp.Core
                 else if (CurrentState == State.riding && elevator.CurrentFloor == RequestedFloor)
                 {
                     elevator.ExitAsync(this);
-                    elevator.StateChanged -= HandleElevatorStateChanged;
+
+                    foreach (var item in _building.Elevators)
+                    {
+                        item.StateChanged -= HandleElevatorStateChanged;
+                    }
+                    
                     RequestedFloor = null;
                     CurrentState = State.none;
                 }
