@@ -18,7 +18,7 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Building in which occupant belongs to
         /// </summary>
-        private readonly Building _building;
+        protected readonly Building _building;
 
         /// <summary>
         /// Requested direction for elevator
@@ -43,7 +43,7 @@ namespace ElevatorApp.Core
         /// <summary>
         /// Floor that occupant is currently on. Default value is 1 (ground floor)
         /// </summary>
-        private int _currentFloor = 1;
+        protected int _currentFloor = 1;
 
         /// <summary>
         /// Public property for occupant elevator
