@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ElevatorApp.Core
 {
     public class ElevatorViewModel
@@ -8,6 +10,7 @@ namespace ElevatorApp.Core
         public double Capacity { get; set; }
         public int CurrentFloor { get; set; }
         public Elevator.Direction CurrentDirection { get; set; }
+        public IEnumerable<Request> ActiveRequests { get; set; }
 
         public static ElevatorViewModel From(Elevator elevator)
         {
@@ -18,7 +21,8 @@ namespace ElevatorApp.Core
                 OccupantCount = elevator.OccupantsCount,
                 Capacity = elevator.Capcity,
                 CurrentFloor = elevator.CurrentFloor,
-                CurrentDirection = elevator.CurrentDirection
+                CurrentDirection = elevator.CurrentDirection,
+                ActiveRequests = elevator.GetDisembarkRequests()
             };
         }
     }
