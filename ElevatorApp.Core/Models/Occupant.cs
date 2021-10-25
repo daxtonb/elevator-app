@@ -235,7 +235,7 @@ namespace ElevatorApp.Core
                     }
                     catch (Exception)
                     {
-                        _building.LogMessage($"Elevator {elevator.Id}\tNo enough room!");
+                        _building.LogMessage($"Elevator {elevator.Id}\tNot enough room! Wait for the next elevator.");
                     }
                 }
                 else if (CurrentState == State.riding && elevator.CurrentFloor == RequestedFloor)

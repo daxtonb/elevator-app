@@ -106,8 +106,6 @@ namespace ElevatorApp.Core
 
                 OpenDoors();
                 RemoveRequest<DisembarkRequest>(CurrentFloor);
-
-                _currentRequest = null;
             }
             else if (IsMoving)
             {
@@ -119,8 +117,6 @@ namespace ElevatorApp.Core
                 {
                     _currentHeight -= (_maxSpeed * ((double)ElevatorConstants.ELAPSE_TIME / 1000));
                 }
-
-                                _building.LogMessage($"{_currentHeight}\t{_building.FloorHeight}\t{_currentHeight % _building.FloorHeight}");
 
                 // CONDITION: Floor was changed
                 if (_currentHeight % _building.FloorHeight == 0)
@@ -134,7 +130,6 @@ namespace ElevatorApp.Core
                 && DateTime.UtcNow.AddSeconds(-_timeToCloseDoors) >= _doorsOpenedDateTime.Value)
             {
                 CloseDoorsAsync().Wait();
-                _doorsOpenedDateTime = null;
             }
             // CONDITION: Doors are closed
             else if (IsDoorsClosed || IsReady)

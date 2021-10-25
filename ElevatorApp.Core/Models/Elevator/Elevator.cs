@@ -280,16 +280,32 @@ namespace ElevatorApp.Core
 
                 if (IsDirectionUp)
                 {
-                    nextUp = requestsOrderedAscending.FirstOrDefault(r => r.Direction == Elevator.Direction.Up && r.FloorNumber >= CurrentFloor);
-                    nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber >= CurrentFloor);
+                    if (IsMoving)
+                    {
+                        nextUp = requestsOrderedAscending.FirstOrDefault(r => r.Direction == Elevator.Direction.Up && r.FloorNumber > CurrentFloor);
+                        nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber > CurrentFloor);
+                    }
+                    else
+                    {
+                        nextUp = requestsOrderedAscending.FirstOrDefault(r => r.Direction == Elevator.Direction.Up && r.FloorNumber >= CurrentFloor);
+                        nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber >= CurrentFloor);
+                    }
                     nextDown = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber < CurrentFloor);
 
                     return nextUp ?? nextAlongTheWay ?? nextDown;
                 }
                 else if (IsDirectionDown)
                 {
-                    nextDown = requestsOrderedDescending.FirstOrDefault(r => r.Direction == Elevator.Direction.Down && r.FloorNumber <= CurrentFloor);
-                    nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
+                    if (IsMoving)
+                    {
+                        nextDown = requestsOrderedDescending.FirstOrDefault(r => r.Direction == Elevator.Direction.Down && r.FloorNumber < CurrentFloor);
+                        nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber < CurrentFloor);
+                    }
+                    else
+                    {
+                        nextDown = requestsOrderedDescending.FirstOrDefault(r => r.Direction == Elevator.Direction.Down && r.FloorNumber <= CurrentFloor);
+                        nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
+                    }
                     nextUp = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber > CurrentFloor);
 
                     return nextDown ?? nextAlongTheWay ?? nextUp;
@@ -307,6 +323,7 @@ namespace ElevatorApp.Core
         private Task CloseDoorsAsync()
         {
             CurrentState = State.DoorsClosed;
+            _doorsOpenedDateTime = null;
             return SetNextRequestAsync();
         }
 

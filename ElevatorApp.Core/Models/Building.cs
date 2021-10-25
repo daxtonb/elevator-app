@@ -82,7 +82,7 @@ namespace ElevatorApp.Core
                 LogMessage($"Elevator {elevator.Id}\tPassing Floor: {eventArgs.FloorNumber}");
             } else
             {
-                LogMessage($"Elevator {elevator.Id}\tStopped at Floor {elevator.CurrentFloor}");
+                LogMessage($"Elevator {elevator.Id}\tStopped at Floor: {elevator.CurrentFloor}");
             }
         }
 
@@ -106,6 +106,7 @@ namespace ElevatorApp.Core
             {
                 var elevator = ChooseElevator(request) ?? Elevators.First();
                 elevator.AddRequestAsync(request);
+                LogMessage($"Elevator {elevator?.Id} \t{request.FloorNumber}\t{request.IsFlaggedForLater}");
             });
         }
 
