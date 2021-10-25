@@ -68,7 +68,7 @@ namespace ElevatorApp.Server
         private Building CreateBuilding()
         {
 #if DEBUG
-            return new Building(10, 2, 15000);
+            return new Building(10, 2, 1500);
 #else
             int floorCount = GetIntFromuser("Enter number of building floors", 2);
             int elevatorCount = GetIntFromuser("Enter number of elevators in building");
