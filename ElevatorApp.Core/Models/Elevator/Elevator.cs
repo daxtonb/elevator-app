@@ -219,7 +219,7 @@ namespace ElevatorApp.Core
                 else if (IsDirectionDown)
                 {
                     if (IsMoving)
-                        nextAlongTheWay = requestsOrderedAscending.FirstOrDefault(r => r.FloorNumber < CurrentFloor - 1);
+                        nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber < CurrentFloor - 1);
                     else
                         nextAlongTheWay = requestsOrderedDescending.FirstOrDefault(r => r.FloorNumber <= CurrentFloor);
 
