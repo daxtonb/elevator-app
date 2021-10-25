@@ -17,13 +17,6 @@ namespace ElevatorApp.Test
                 building = new Building(_defaultFloorCount, _defaultElevatorCount, _defaultElevatorMaxWeight);
             }
 
-            foreach (var elevator in building.Elevators)
-            {
-                elevator.StateChanged += handleStateChanged;
-                elevator.DirectionChanged += handleDirectionChanged;
-                elevator.FloorChanged += handleFloorChanged;
-            }
-
             return new Occupant(building, _defaultOccupantWeight);
         }
 
@@ -31,26 +24,7 @@ namespace ElevatorApp.Test
         public Elevator CreateElevator(Building building)
         {
             var elevator = new Elevator(building, _defaultElevatorMaxWeight);
-            elevator.StateChanged += handleStateChanged;
-            elevator.DirectionChanged += handleDirectionChanged;
-            elevator.FloorChanged += handleFloorChanged;
             return elevator;
         }
-
-        private void handleStateChanged(Elevator sender, Elevator.StateChangedEventArgs eventArgs)
-        {
-            Console.WriteLine($"{DateTime.Now.TimeOfDay}\tState changed | {sender}");
-        }
-
-        private void handleDirectionChanged(Elevator sender, Elevator.DirectionChangedEventArgs eventArgs)
-        {
-            Console.WriteLine($"{DateTime.Now.TimeOfDay}\tDirection changed | {sender}");
-        }
-
-        private void handleFloorChanged(Elevator sender, Elevator.FloorChangedEventArgs eventArgs)
-        {
-            Console.WriteLine($"{DateTime.Now.TimeOfDay}\tFloor changed | {sender}");
-        }
-
     }
 }
