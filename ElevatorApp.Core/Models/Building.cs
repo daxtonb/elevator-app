@@ -179,20 +179,22 @@ namespace ElevatorApp.Core
                 {
                     continue;
                 }
-                if (closest == null)
+                else if (closest == null)
                 {
                     closest = current;
                 }
-                else
+                else if (Math.Abs(current.CurrentFloor - request.FloorNumber) < Math.Abs(closest.CurrentFloor - request.FloorNumber))
                 {
-                    if (Math.Abs(current.CurrentFloor - request.FloorNumber) < Math.Abs(closest.CurrentFloor - request.FloorNumber))
-                    {
-                        closest = current;
-                    }
+                    closest = current;
                 }
             }
 
-            return closest;
+            if (closest?.Capcity < 100)
+            {
+                return closest;
+            }
+
+            return elevators.FirstOrDefault(e => e.Capcity < 100);
         }
 
         /// <summary>
