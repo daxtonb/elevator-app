@@ -62,35 +62,5 @@ namespace ElevatorApp.Server
                 endpoints.MapHub<ElevatorHub>(HubConstants.URL_PATH);
             });
         }
-
-        /// <summary>
-        /// Fetches and validates user input for an integer value
-        /// </summary>
-        private int GetIntFromuser(string prompt, int minimumValue = 1)
-        {
-            while (true)
-            {
-                Console.ResetColor();
-                Console.Write($"{prompt}: ");
-
-                if (int.TryParse(Console.ReadLine(), out int input))
-                {
-                    if (input >= minimumValue)
-                    {
-                        return input;
-                    }
-                    else
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Please enter a value greater than {minimumValue}");
-                    }
-                }
-                else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please enter a valid integer");
-                }
-            }
-        }
     }
 }
