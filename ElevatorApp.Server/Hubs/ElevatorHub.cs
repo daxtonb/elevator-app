@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElevatorApp.Core;
+using ElevatorApp.Server.Models;
 using ElevatorApp.Server.Services;
 using Microsoft.AspNetCore.SignalR;
 
@@ -17,7 +18,7 @@ namespace ElevatorApp.Server.Hubs
         private readonly ElevatorService _elevatorService;
         public static Dictionary<string, Occupant> OccupantsByConnectionId { get; } = new Dictionary<string, Occupant>();
 
-        public ElevatorHub(Building building, ElevatorService elevatorService)
+        public ElevatorHub(ServerBuilding building, ElevatorService elevatorService)
         {
             _building = building;
             _elevatorService = elevatorService;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ElevatorApp.Core;
 using ElevatorApp.Server.Hubs;
+using ElevatorApp.Server.Models;
 using ElevatorApp.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,7 +45,7 @@ namespace ElevatorApp.Server
             services.AddSignalR();
 
             // Add an instance of Building as an injectable dependnecy
-            services.AddSingleton(CreateBuilding());
+            services.AddSingleton<ServerBuilding>();
 
             services.AddSingleton<ElevatorService>();
         }
@@ -60,20 +61,6 @@ namespace ElevatorApp.Server
             {
                 endpoints.MapHub<ElevatorHub>(HubConstants.URL_PATH);
             });
-        }
-
-        /// <summary>
-        /// Creates a building for the application
-        /// </summary>
-        private Building CreateBuilding()
-        {
-#if DEBUG
-            return new Building(10, 2, 1500);
-#else
-            int floorCount = GetIntFromuser("Enter number of building floors", 2);
-            int elevatorCount = GetIntFromuser("Enter number of elevators in building");
-            int maxElevatorWeight = GetIntFromuser("Enter elevator weight capacity", 1000);
-#endif
         }
 
         /// <summary>

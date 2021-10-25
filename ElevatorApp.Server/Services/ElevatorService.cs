@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using ElevatorApp.Core;
 using ElevatorApp.Server.Hubs;
+using ElevatorApp.Server.Models;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ElevatorApp.Server.Services
@@ -11,7 +12,7 @@ namespace ElevatorApp.Server.Services
         private readonly Building _building;
         private readonly IHubContext<ElevatorHub> _hub;
 
-        public ElevatorService(Building building, IHubContext<ElevatorHub> hub)
+        public ElevatorService(ServerBuilding building, IHubContext<ElevatorHub> hub)
         {
             _building = building;
             _hub = hub;
