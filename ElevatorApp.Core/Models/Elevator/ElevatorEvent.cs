@@ -120,7 +120,7 @@ namespace ElevatorApp.Core
 
                 if (IsDirectionUp)
                 {
-                    _currentHeight += _maxSpeed;
+                    _currentHeight += (_maxSpeed * ((double)ElevatorConstants.ELAPSE_TIME / 1000));
 
                     // CONDITION: Floor was changed
                     if (_currentHeight % _building.FloorHeight == 0)
@@ -130,7 +130,7 @@ namespace ElevatorApp.Core
                 }
                 else
                 {
-                    _currentHeight -= _maxSpeed;
+                    _currentHeight -= (_maxSpeed * ((double)ElevatorConstants.ELAPSE_TIME / 1000));
 
                     // CONDITION: Floor was changed
                     if (_currentHeight % _building.FloorHeight == 0)
