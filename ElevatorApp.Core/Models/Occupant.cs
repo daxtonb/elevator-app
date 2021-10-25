@@ -262,27 +262,6 @@ namespace ElevatorApp.Core
             }
         }
 
-        /// <summary>
-        /// Request floor for elevator to stop at.
-        /// </summary>
-        /// <param name="floorNumber">Reueqsted floor number</param>
-        public Task RequstFloorAsync(int floorNumber)
-        {
-            if (_elevator == null)
-            {
-                throw new Exception("Cannot request floor outside of elevator.");
-            }
-
-            if (floorNumber > _building.FloorCount)
-            {
-                throw new ArgumentOutOfRangeException($"{floorNumber} is not a valid floor number.");
-            }
-
-            RequestedFloor = floorNumber;
-
-            return _elevator.AddDisembarkRequestAsync(new DisembarkRequest(floorNumber));
-        }
-
         #region Occupant Enums
 
         public enum State { none, waiting, riding }
