@@ -255,7 +255,9 @@ namespace ElevatorApp.Core
                     }
                     
                     RequestedFloor = null;
+                    _elevator = null;
                     CurrentState = State.none;
+                    CurrentFloor = elevator.CurrentFloor;
                 }
             }
         }
