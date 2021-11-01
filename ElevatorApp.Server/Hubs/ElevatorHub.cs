@@ -14,16 +14,35 @@ namespace ElevatorApp.Server.Hubs
     /// </summary>
     public class ElevatorHub : Hub
     {
+        /// <summary>
+        /// Building represented on server
+        /// </summary>
         private readonly Building _building;
+
+        /// <summary>
+        /// Elevator service for sending notifications and data to client
+        /// </summary>
         private readonly ElevatorService _elevatorService;
+
+        /// <summary>
+        /// Current occupants in session
+        /// </summary>
+        /// <typeparam name="string">Occupant's connection ID</typeparam>
+        /// <typeparam name="Occupant">Occupant</typeparam>
         public static Dictionary<string, Occupant> OccupantsByConnectionId { get; } = new Dictionary<string, Occupant>();
 
+
+        /// <param name="building">Server's Building instance</param>
+        /// <param name="elevatorService">Elevator service</param>
         public ElevatorHub(ServerBuilding building, ElevatorService elevatorService)
         {
             _building = building;
             _elevatorService = elevatorService;
         }
 
+        /// <summary>
+        /// Creates an occupant for each client connection and registers event handlers
+        /// </summary>
         public override Task OnConnectedAsync()
         {
             var occupant = new Occupant(_building, 150);

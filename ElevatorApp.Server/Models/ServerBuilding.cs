@@ -27,6 +27,11 @@ namespace ElevatorApp.Server.Models
             }
         }
 
+        /// <summary>
+        /// Additionally logs messages to log file
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="level"></param>
         public override void LogMessage(string message, LogLevel level = LogLevel.Information)
         {
             base.LogMessage(message, level);

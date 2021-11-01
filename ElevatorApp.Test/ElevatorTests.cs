@@ -12,18 +12,28 @@ namespace ElevatorApp.Test
     {
         private static readonly MockFactory factory = new MockFactory();
 
+        /// <summary>
+        /// Weight must be greater than zero
+        /// </summary>
         [Fact]
         public void Min_Weight_Cannot_Be_Zero()
         {
             TestBadConstructorArguments(0);
         }
 
+        /// <summary>
+        /// Weight must be positive number
+        /// </summary>
         [Fact]
         public void Min_Weight_Cannot_Be_Negative()
         {
             TestBadConstructorArguments(-0.1);
         }
 
+        /// <summary>
+        /// Invalid Elevator constructor arguments should fail
+        /// </summary>
+        /// <param name="maxElevatorWeight">Max elevator weight</param>
         void TestBadConstructorArguments(double maxElevatorWeight)
         {
             // Given
@@ -153,6 +163,10 @@ namespace ElevatorApp.Test
             Assert.True(stop1 < stop2, $"stop1: {stop1}, stop2: {stop2}");
         }
 
+        /// <summary>
+        /// If user selects a floor while the elevator is moving, and the selected floor is the next floor
+        /// that the elevator is about to pass, the elevator will skip this request and come back to it later
+        /// </summary>
         [Fact]
         public async void Elevator_Skips_Request_For_Next_Floor()
         {
@@ -198,7 +212,6 @@ namespace ElevatorApp.Test
         /// <summary>
         /// An elevator that cannot fit the requesting occupant will return to occupant after an occupant exits
         /// </summary>
-        /// <returns></returns>
         [Fact]
         public async void Full_Elevator_Returns()
         {
@@ -229,6 +242,11 @@ namespace ElevatorApp.Test
             Assert.NotNull(occupantWaiting.Elevator);
         }
 
+        /// <summary>
+        /// Simulates a user requesting and entering an elevator
+        /// </summary>
+        /// <param name="occupant">Requesting occupant</param>
+        /// <param name="direction">Direction of travel</param>
         private async Task RequestElevatorAsync(Occupant occupant, Elevator.Direction direction)
         {
             await occupant.RequestElevatorAsync(Elevator.Direction.Up);
@@ -236,6 +254,11 @@ namespace ElevatorApp.Test
             Thread.Sleep(ElevatorConstants.ELAPSE_TIME + 1000);
         }
 
+        /// <summary>
+        /// Simulates a user requesting a floor from inside an elevator
+        /// </summary>
+        /// <param name="occupant">Requesting occupant</param>
+        /// <param name="floorNumber">Requested floor</param>
         private async Task RequestFloorAsync(Occupant occupant, int floorNumber)
         {
             await occupant.RequestFloorAsync(floorNumber);
@@ -243,6 +266,10 @@ namespace ElevatorApp.Test
             Thread.Sleep(ElevatorConstants.TIME_TO_CLOSE_DOORS * 1000 + ElevatorConstants.ELAPSE_TIME);
         }
 
+        /// <summary>
+        /// Tests whether the occupant was able to enter requested elevator
+        /// </summary>
+        /// <param name="occupant">Requesting occupant</param>
         private async Task TestIsInElevatorAsync(Occupant occupant)
         {
             // Given
@@ -262,6 +289,11 @@ namespace ElevatorApp.Test
             occupant.StateChanged -= onStateChanged;
         }
 
+        /// <summary>
+        /// Tests whether the elevator moves after a request is made
+        /// </summary>
+        /// <param name="occupant">Requesting occupant</param>
+        /// <param name="floorNumber">Requested floor's number</param>
         private async Task TestElevatorIsMovingAsync(Occupant occupant, int floorNumber)
         {
             // Given
@@ -282,6 +314,12 @@ namespace ElevatorApp.Test
             occupant.Elevator.StateChanged -= onElevatorStateChanged;
         }
 
+        /// <summary>
+        /// Tests that the elevator travels to the requested floor and the occupant exits on requested floor
+        /// </summary>
+        /// <param name="occupant">Requesting occupant</param>
+        /// <param name="floorNumber">Requested floor's number</param>
+        /// <returns></returns>
         private async Task TestOccupantExitsOnRequestedFloor(Occupant occupant, int floorNumber)
         {
             // Given
